@@ -1,0 +1,40 @@
+import arcade # for use module of arcade
+
+syntax def on_draw that make order in funtion have doing forever
+
+if __name__ == '__main__' this is standard code for check that is main program or not
+
+#def <code> #standard code for arcade
+    __init__ # this part set standare
+    on_draw #this part use for write your window
+    update # this part for update your code about many value
+    on_key_press # call this method when press keyboard
+    on_key_release # call this method when keyboard have been release
+    on_mouse_press # call mouse have press
+    on_mouse_motion # call when mouse have motion
+    on_mouse_release # call when mouse have been release
+
+Example about method key in on_key_press
+def on_key_press(self, key, key_modifiers):
+
+
+#import orther library
+from <name_of_file> import <name_of_class_for_using>
+
+arcade.set_background_color(<Your colour>)
+
+self.<name> = arcade.Sprite("<Location of picture file>") set images
+self.<name>.set_position(x,y)   # set postion of you sprite
+
+self.<name>.draw() # draw your sprite and write this part in def on_draw
+
+<variable> = self.<name> you can set variable instead use self.<name>
+
+aboout how to send variable:
+
+def <name_function>(type01,*type02,**type03):
+    #so type01 is normal variable
+    #next type02 is array variable
+    #next type03 is list variable
+
+import arcade.key # when want to use key
