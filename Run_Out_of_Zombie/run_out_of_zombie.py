@@ -47,14 +47,6 @@ class Game_Window(arcade.Window):
         arcade.set_background_color(arcade.color.WHITE)
         self.current_state = "interface"
         self.point = 1
-#        self.setup_map= []
-#        for row in range(NUM_ROW):
-#            self.setup_map.append([])
-#            for column in range(NUM_COLUMN):
-#                self.setup_map[row].append(0)
-
-#        self.map = Map(SCREEN_WIDTH,SCREEN_HIGHT,WIDTH,HIGHT,self.setup_map,NUM_TRAP,NUM_ZOMBIE,NUM_WALL,SCREEN_MAP+10)
-#        self.knight_sprite = Game_Character('images/Knight.png',knight=self.map.knight)
                         
             
     def update(self, data):
@@ -66,9 +58,11 @@ class Game_Window(arcade.Window):
                 self.setup_map.append([])
                 for column in range(NUM_COLUMN):
                     self.setup_map[row].append(0)
-            self.map = Map(SCREEN_WIDTH,SCREEN_HIGHT,WIDTH,HIGHT,self.setup_map,NUM_TRAP,NUM_ZOMBIE,NUM_WALL,SCREEN_MAP+10)
+            self.map = VS_Map(SCREEN_WIDTH,SCREEN_HIGHT,WIDTH,HIGHT,self.setup_map,NUM_TRAP,NUM_ZOMBIE,NUM_WALL,SCREEN_MAP+10)
             self.knight_sprite = Game_Character('images/Knight.png',knight=self.map.knight)
             self.current_state = "game_running"
+            for count in range(NUM_ZOMBIE):
+                self.zombie_sprite.append(Game_Character('images/Zombie_01.png',zombie=self.map.zombie[count]))
             
         elif self.current_state == "game_running":
             if self.map.knight.status == 2:
@@ -169,7 +163,6 @@ class Game_Window(arcade.Window):
         size = 50
         delete_length = len(output)/2.5*size
         arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length  , SCREEN_HIGHT/2+60, arcade.color.RED, size)
-
         size = 25
         output = "{:0>2.0f}:{:0>2.0f}".format(self.map.knight_01.kill,self.map.knight_02.kill)
         delete_length = len(output)/2.5*size
@@ -265,10 +258,10 @@ class Game_Window(arcade.Window):
             self.map.draw_wall()
             self.knight_sprite.draw()
             self.map.draw_trap()
-            self.map.draw_zombie()
-#            for count in range(NUM_ZOMBIE):
-#                self.map.zombie[count].draw()
-#            self.map.set_up = 0
+            for count in range(NUM_ZOMBIE):
+                if self.map.zombie[count].status == 1:
+                    self.zombie_sprite[count].draw()
+            self.map.set_up = 0
             self.map.board.standard_draw()
             self.map.board.event_draw()
         elif self.current_state == "you_win":

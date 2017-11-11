@@ -123,6 +123,8 @@ class VS_Map:
         self.hights = SCREEN_HIGHT
         self.knight_01 = VS_Main_Character(self, 0, 0,2,1)
         self.knight_02 = VS_Main_Character(self, len(self.plan_map[0])-1,len(self.plan_map)-1,1,2)
+        self.knight_03 = VS_Main_Character(self, 0, len(self.plan_map)-1,4,3)
+        self.knight_04 = VS_Main_Character(self, len(self.plan_map[0])-1,,3,4)
         self.zombie = []
         self.num_trap = NUM_TRAP
         self.num_zombie = NUM_ZOMBIE
@@ -215,10 +217,8 @@ class VS_Map:
         data_of_key = self.trap_keys[import_key]
         same_target = []
         for test_key in self.trap_keys.keys():
-#            print("Test Key is {} and data is {}".format(test_key,self.trap_keys[test_key]))
             if data_of_key[0] == self.trap_keys[test_key][0] and data_of_key[1] == self.trap_keys[test_key][1]:
                 same_target.append(test_key)
-#                print("Collect key is {}".format(test_key))
         sum_score = 1 
         for collect_key in same_target:
             sum_score += self.trap_keys[collect_key][2]
@@ -230,21 +230,6 @@ class VS_Map:
         if sum_score == 1: 
             self.board.event_data("Trap at ({},{}) open by ".format(data_of_key[0]+1,data_of_key[1]+1) + who + " at ({},{})".format(pos_x+1,pos_y+1))
 
-# Update all zombie
-##    def update_zombie(self):
-##        for count in range(len(self.zombie)):
-##            print("Update Zombie {}".format(count))
-##            self.zombie[count].update()
-#            self.zombie[count].draw()
-#            time.sleep(0.01)   
-##            self.knight.check_black_hole()
-
-# Draw all zombie
-##    def draw_zombie(self):
-##        for count in range(len(self.zombie)):
-##            if self.zombie[count].status == 1:
-##                self.zombie[count].draw()
-
 # Check all black hole for Zombie
     def check_only_black_hole(self):
         for count in range(len(self.zombie)):
@@ -252,9 +237,7 @@ class VS_Map:
                 self.zombie[count].check_black_hole()
 
     def draw_trap(self):
-#        print("This is in draw_trap len(self.trap) is {}".format(self.trap))
         number_of_trap = len(self.trap_keys)
-#        print(number_of_trap)
         count = 0
         while count < number_of_trap:
             if self.trap_keys[count+11][2] == 1:
