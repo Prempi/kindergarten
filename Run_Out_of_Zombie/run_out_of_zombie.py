@@ -41,10 +41,12 @@ class Game_Character(arcade.Sprite):
 
 class Game_Window(arcade.Window):
     def __init__(self, width, height):
-        super().__init__(width, height)
+        super().__init__(width, height,"Run Out of ZOMBIES")
         arcade.set_background_color(arcade.color.WHITE)
-        self.current_state = "interface"
+        self.current_state = "welcome"
         self.point = 1
+        self.time = 1
+        self.background = arcade.load_texture("images/welcome_background.png")
                         
             
     def update(self, data):
@@ -65,7 +67,7 @@ class Game_Window(arcade.Window):
             for count in range(NUM_ZOMBIE):
                 self.zombie_sprite.append(Game_Character('images/Zombie_01.png',zombie=self.map.zombie[count]))
             self.current_state = "game_running"
-            
+
         elif self.current_state == "game_running":
             if self.map.knight_01.status == 2:
                 self.current_state = "you_win"
@@ -248,11 +250,24 @@ class Game_Window(arcade.Window):
 
     def interface(self):
         arcade.draw_text("Classic Mode", SCREEN_WIDTH/2 -175,500,arcade.color.FLAME,30)
-        arcade.draw_text("VS Mode", SCREEN_WIDTH/2 -140,200,arcade.color.ANTIQUE_FUCHSIA,30)
+        arcade.draw_text("Survival Mode", SCREEN_WIDTH/2 -175,300,arcade.color.ANTIQUE_FUCHSIA,30)
+        arcade.draw_text("Team Mode", SCREEN_WIDTH/2 -175,100,arcade.color.AMAZON,30)
         if self.point == 1:
             arcade.draw_line(SCREEN_WIDTH/2 - 180,500,SCREEN_WIDTH/2 + 70,500,arcade.color.CORAL_RED)
+        elif self.point == 2:
+            arcade.draw_line(SCREEN_WIDTH/2 - 180,300,SCREEN_WIDTH/2+70,300,arcade.color.CORAL_RED)
         else:
-            arcade.draw_line(SCREEN_WIDTH/2 - 140,200,SCREEN_WIDTH/2+30,200,arcade.color.CORAL_RED)
+            arcade.draw_line(SCREEN_WIDTH/2 - 180,100,SCREEN_WIDTH/2+70,100,arcade.color.CORAL_RED)
+
+    def welcome(self):
+        #arcade.draw_text("Welcome to the run out of zombies", SCREEN_WIDTH/2 -175,500,arcade.color.FLAME,30)
+        #arcade.set_background_color(arcade.color.BLACK)
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.background)
+        if self.time<=30:
+            arcade.draw_text("Press ENTER to Start", SCREEN_WIDTH/2 -175,100,arcade.color.RED_DEVIL,30)
+        if self.time>60:
+            self.time=1
+        self.time+=1
 
     def on_draw(self):
         arcade.start_render()
@@ -275,6 +290,9 @@ class Game_Window(arcade.Window):
             self.draw_lose_game()
         elif self.current_state == "interface":
             self.interface()
+        elif self.current_state == "welcome":
+            arcade.set_background_color(arcade.color.BLACK)
+            self.welcome()
         elif self.current_state == "time_out":
             self.time_out()
         elif self.current_state == "vs_lose":
@@ -301,11 +319,15 @@ class Game_Window(arcade.Window):
 
     def on_key_press(self, key, key_modifiers):
         print(key)
-        if key == 65307 and self.current_state == "interface":
+        if key == 65307 and self.current_state == "welcome":
             exit(0)            
             arcade.close_window()
-        elif key == 65307:
+        elif key == arcade.key.ENTER and self.current_state == "welcome":
+            arcade.set_background_color(arcade.color.WHITE)
+            self.point = 1
             self.current_state = "interface"
+        elif key == 65307:
+            self.current_state = "welcome"
         elif self.current_state == "game_running":
             self.map.on_key_press(key, key_modifiers)
         elif self.current_state == "vs_game":
@@ -314,13 +336,24 @@ class Game_Window(arcade.Window):
             self.current_state = "interface"
             self.point = 1
         elif self.current_state == "interface" and key == arcade.key.UP:
-            self.point = 1
+            if self.point == 1:
+                self.point = 1
+            else:
+                self.point -= 1
         elif self.current_state == "interface" and key == arcade.key.DOWN:
-            self.point = 2
+            if self.point==3:
+                self.point = 3
+            else:
+                self.point+=1
         elif self.current_state == "interface" and key == arcade.key.ENTER and self.point == 1:
             self.current_state = "setting_game"
         elif self.current_state == "interface" and key == arcade.key.ENTER and self.point == 2:
             self.current_state = "set_vs_game"
+        #Team Mode
+        '''
+        elif self.current_state == "interface" and key == arcade.key.ENTER and self.point == 3:
+            self.current_state = "set_team_game"
+        '''
 
 if __name__ == '__main__':
     window = Game_Window(SCREEN_WIDTH, SCREEN_HIGHT)
