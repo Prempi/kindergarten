@@ -114,22 +114,20 @@ def print_key(text,dictionary):
 
 #value in map have 1:start  2:target 3:zombie 4:black_hole >10:switch
 class VS_Map:
-    def __init__(self, SCREEN_WIDTH, SCREEN_HIGHT, WIDTH, HIGHT, array_map , NUM_TRAP, NUM_ZOMBIE, NUM_WALL,SCREEN_BOARD):
+    def __init__(self, SCREEN_WIDTH, SCREEN_HIGHT, WIDTH, HIGHT, array_map , NUM_TRAP, NUM_ZOMBIE, NUM_WALL,SCREEN_BOARD, main):
 #preparing variable
         self.plan_map = array_map
+        self.main = main
         self.width = WIDTH
         self.hight = HIGHT
         self.widths = SCREEN_WIDTH
         self.hights = SCREEN_HIGHT
-        self.knight_01 = VS_Main_Character(self, 0, 0,2,1)
-        self.knight_02 = VS_Main_Character(self, len(self.plan_map[0])-1,len(self.plan_map)-1,1,2)
-        self.knight_03 = VS_Main_Character(self, 0, len(self.plan_map)-1,4,3)
-        self.knight_04 = VS_Main_Character(self, len(self.plan_map[0])-1,,3,4)
         self.zombie = []
         self.num_trap = NUM_TRAP
         self.num_zombie = NUM_ZOMBIE
         self.num_wall = NUM_WALL
         self.set_up = 1
+        self.round = 0
         self.board = Board(SCREEN_BOARD,SCREEN_HIGHT,self)
         print("len(self.plan_map) is %i"%(len(self.plan_map)))
         print("len(self.plan_map[0]) is %i"%(len(self.plan_map[0])))
@@ -198,6 +196,24 @@ class VS_Map:
         print_map("Print set up map of zombie after add zombie",self.zombie_map) # check zombie map
         print_map_array("Print set up wall map after add wall",self.wall_map) # check wall map
 
+    def create_knight(self, number_of_knight):
+        if 1 in number_of_knight:
+            self.knight_01 = VS_Main_Character(self, 0, 0,2,1,1)
+        else:
+            self.knight_01 = VS_Main_Character(self, 0, 0,2,1,0)
+        if 2 in number_of_knight:
+            self.knight_02 = VS_Main_Character(self, len(self.plan_map[0])-1,len(self.plan_map)-1,1,2,1)
+        else:
+            self.knight_02 = VS_Main_Character(self, len(self.plan_map[0])-1,len(self.plan_map)-1,1,2,0)
+        if 3 in number_of_knight:
+            self.knight_03 = VS_Main_Character(self, 0, len(self.plan_map)-1,4,3,1)
+        else:
+            self.knight_03 = VS_Main_Character(self, 0, len(self.plan_map)-1,4,3,0)
+        if 4 in number_of_knight:
+            self.knight_04 = VS_Main_Character(self, len(self.plan_map[0])-1,0,3,4,1)
+        else:
+            self.knight_04 = VS_Main_Character(self, len(self.plan_map[0])-1,0,3,4,0)
+
 #Draw wall
     def draw_wall(self):
         for row in range(len(self.wall_map)):
@@ -252,6 +268,11 @@ class VS_Map:
                     arcade.draw_rectangle_filled(column*self.width+self.width/2+1,row*self.hight+self.hight/2,self.width-1,self.hight-1,arcade.color.GREEN)
                 elif row == 0 and column == 0:
                     arcade.draw_rectangle_filled(column*self.width+self.width/2+1,row*self.hight+self.hight/2,self.width-1,self.hight-1,arcade.color.OPERA_MAUVE)
+    def update_all_zombie(self):
+        for count in range(self.zombie):
+            if self.zombie[count].status == 1:
+                self.zombie[count].update()
+        self.round += 1
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.MOTION_DOWN:

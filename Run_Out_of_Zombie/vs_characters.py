@@ -1,7 +1,7 @@
 import arcade, random, time
 
 class VS_Main_Character:
-    def __init__(self, world, pos_x, pos_y, target, id_code):
+    def __init__(self, world, pos_x, pos_y, target, id_code, status):
         self.world = world
         self.id = id_code
         self.pos_x = pos_x
@@ -12,7 +12,7 @@ class VS_Main_Character:
         self.limit_y = len(self.world.plan_map)
         self.target = target
         print("limit is %i and %i"%(self.limit_x,self.limit_y))
-        self.status = 1
+        self.status = status
         self.kill = 0
         self.time = 0
 # assign status 1 is alive 2 is winner 3 and 4 is die last is five die from hero
@@ -26,6 +26,9 @@ class VS_Main_Character:
             self.check_map()
             self.check_zombie_on_map(1)
             self.world.check_only_black_hole()
+            if self.world.main.current_state == "game_running":
+                self.world.update_all_zombie()
+            self.world.check_only_black_hole()
             self.check_hero()
 #            self.round += 1
 #            print("----------finish round {:>3.0f}----------".format(self.round))
@@ -34,6 +37,9 @@ class VS_Main_Character:
             self.check_map() 
             self.check_zombie_on_map(1) 
             self.world.check_only_black_hole()
+            if self.world.main.current_state == "game_running":
+                self.world.update_all_zombie()
+            self.world.check_only_black_hole()
             self.check_hero()
 #            self.round += 1
 #            print("----------finish round {:>3.0f}----------".format(self.round))
@@ -41,12 +47,12 @@ class VS_Main_Character:
         self.real_y = 1 + self.pos_y*self.world.hight + self.world.hight/2
 
     def check_hero(self):
-        if self.id == 1 and self.pos_x == self.world.knight_02.pos_x and self.pos_y == self.world.knight_02.pos_y:
+        if self.id == 1 and self.pos_x == self.world.knight_02.pos_x and self.pos_y == self.world.knight_02.pos_y and self.world.knight_02.status == 1:
             self.world.knight_02.status = 5
             self.world.board.event_data("-----------------------------------------")    
             self.world.board.event_data("     Player 01 Kill Player 02     ")    
             self.world.board.event_data("-----------------------------------------")    
-        elif self.id == 2 and self.pos_x == self.world.knight_01.pos_x and self.pos_y == self.world.knight_01.pos_y:
+        elif self.id == 2 and self.pos_x == self.world.knight_01.pos_x and self.pos_y == self.world.knight_01.pos_y and self.world.knight_01.status == 1:
             self.world.knight_01.status = 5
             self.world.board.event_data("-----------------------------------------")    
             self.world.board.event_data("     Player 02 Kill Player 01     ")    
