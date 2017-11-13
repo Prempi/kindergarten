@@ -58,6 +58,8 @@ class Game_Window(arcade.Window):
                 for column in range(NUM_COLUMN):
                     self.setup_map[row].append(0)
             self.map = VS_Map(SCREEN_WIDTH,SCREEN_HIGHT,WIDTH,HIGHT,self.setup_map,NUM_TRAP,NUM_ZOMBIE,NUM_WALL,SCREEN_MAP+10,self)
+            self.num_of_player = [1] # set number of player
+            self.map.create_knight(self.num_of_player)
             self.knight_01_sprite = Game_Character('images/Knight.png',knight=self.map.knight_01)
             self.current_state = "game_running"
             for count in range(NUM_ZOMBIE):
@@ -65,12 +67,12 @@ class Game_Window(arcade.Window):
             self.current_state = "game_running"
             
         elif self.current_state == "game_running":
-            if self.map.knight.status == 2:
+            if self.map.knight_01.status == 2:
                 self.current_state = "you_win"
-            elif self.map.knight.status == 3 :
+            elif self.map.knight_01.status == 3 :
                 print("Dead by Black Hole")
                 self.current_state = "you_lose"
-            elif self.map.knight.status == 4 :
+            elif self.map.knight_01.status == 4 :
                 print("Dead by Zombie")
                 self.current_state = "you_lose"
 
@@ -83,6 +85,8 @@ class Game_Window(arcade.Window):
                     self.setup_map[row].append(0)
             self.map = VS_Map(SCREEN_WIDTH,SCREEN_HIGHT,WIDTH,HIGHT,self.setup_map,(NUM_TRAP*2)//3,NUM_ZOMBIE,NUM_WALL,SCREEN_MAP+10,self)
 #            print("Set map finish")
+            self.num_of_player = [1,2] # set number of player
+            self.map.create_knight(self.num_of_player)
             self.knight_01_sprite = Game_Character('images/Knight_02.png',knight=self.map.knight_01)
             self.knight_02_sprite = Game_Character('images/Knight.png',knight=self.map.knight_02)
             self.zombie_sprite = []
