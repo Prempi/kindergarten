@@ -288,8 +288,6 @@ class Game_Window(arcade.Window):
             arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.select_team)
 
     def welcome(self):
-        #arcade.draw_text("Welcome to the run out of zombies", SCREEN_WIDTH/2 -175,500,arcade.color.FLAME,30)
-        #arcade.set_background_color(arcade.color.BLACK)
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.background)
         if self.time<=30:
             arcade.draw_text("Press ENTER to Start", SCREEN_WIDTH/2 -175,100,arcade.color.RED_DEVIL,30)
@@ -298,7 +296,6 @@ class Game_Window(arcade.Window):
         self.time+=1
     
     def set_classic(self):
-        #arcade.draw_text("P1", SCREEN_WIDTH/2 -175,100,arcade.color.RED_DEVIL,30)
         if self.classic_tab%2!=0:
             arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.classic_setting2)
         else:
@@ -422,6 +419,7 @@ class Game_Window(arcade.Window):
             self.p3_tab=0
             self.p4_tab=0
             self.current_state = "set_survival"
+        #set number of player for survival mode
         elif self.current_state == "set_survival" and key == 49:
             self.p1_tab+=1
             if self.p1_tab%2!=0:
@@ -459,6 +457,7 @@ class Game_Window(arcade.Window):
             self.p3_tab=0
             self.p4_tab=0
             self.current_state = "set_team"
+        #set number of player for survival mode
         elif self.current_state == "set_team" and key == 49:
             self.p1_tab+=1
             if self.p1_tab%2!=0:
