@@ -47,6 +47,9 @@ class Game_Window(arcade.Window):
         self.point = 1
         self.time = 1
         self.background = arcade.load_texture("images/welcome_background.png")
+        self.select_classic = arcade.load_texture("images/select_1.png")
+        self.select_survival = arcade.load_texture("images/select_2.png")
+        self.select_team = arcade.load_texture("images/select_3.png")
         self.num_of_player = []
         self.classic_tab = 0
         self.p1_tab = 0
@@ -254,15 +257,17 @@ class Game_Window(arcade.Window):
             arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length + 10 , SCREEN_HIGHT/2 - (3.5*size), arcade.color.RED, size)
 
     def interface(self):
+        '''
         arcade.draw_text("Classic Mode", SCREEN_WIDTH/2 -175,500,arcade.color.FLAME,30)
         arcade.draw_text("Survival Mode", SCREEN_WIDTH/2 -175,300,arcade.color.ANTIQUE_FUCHSIA,30)
         arcade.draw_text("Team Mode", SCREEN_WIDTH/2 -175,100,arcade.color.AMAZON,30)
+        '''
         if self.point == 1:
-            arcade.draw_line(SCREEN_WIDTH/2 - 180,500,SCREEN_WIDTH/2 + 70,500,arcade.color.CORAL_RED)
+            arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.select_classic)
         elif self.point == 2:
-            arcade.draw_line(SCREEN_WIDTH/2 - 180,300,SCREEN_WIDTH/2+70,300,arcade.color.CORAL_RED)
+            arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.select_survival)
         else:
-            arcade.draw_line(SCREEN_WIDTH/2 - 180,100,SCREEN_WIDTH/2+70,100,arcade.color.CORAL_RED)
+            arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.select_team)
 
     def welcome(self):
         #arcade.draw_text("Welcome to the run out of zombies", SCREEN_WIDTH/2 -175,500,arcade.color.FLAME,30)
