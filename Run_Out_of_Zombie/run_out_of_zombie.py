@@ -47,7 +47,12 @@ class Game_Window(arcade.Window):
         self.point = 1
         self.time = 1
         self.background = arcade.load_texture("images/welcome_background.png")
-                        
+        self.num_of_player = []
+        self.classic_tab = 0
+        self.p1_tab = 0
+        self.p2_tab = 0
+        self.p3_tab = 0
+        self.p4_tab = 0
             
     def update(self, data):
 #        print("Update_in_Game_Window")
@@ -268,7 +273,31 @@ class Game_Window(arcade.Window):
         if self.time>60:
             self.time=1
         self.time+=1
+    
+    def set_classic(self):
+        #arcade.draw_text("P1", SCREEN_WIDTH/2 -175,100,arcade.color.RED_DEVIL,30)
+        if self.classic_tab%2!=0:
+            arcade.draw_text("P1", SCREEN_WIDTH/2 ,100,arcade.color.RED_DEVIL,30)
+    def set_survival(self):
+        if self.p1_tab%2!=0:
+            arcade.draw_text("P1", 100,100,arcade.color.RED_DEVIL,30)
+        if self.p2_tab%2!=0:
+            arcade.draw_text("P2", 400,100,arcade.color.RED_DEVIL,30)
+        if self.p3_tab%2!=0:
+            arcade.draw_text("P3", 700,100,arcade.color.RED_DEVIL,30)
+        if self.p4_tab%2!=0:
+            arcade.draw_text("P4", 1000,100,arcade.color.RED_DEVIL,30)
 
+    def set_team(self):
+        if self.p1_tab%2!=0:
+            arcade.draw_text("P1", 100,100,arcade.color.RED_DEVIL,30)
+        if self.p2_tab%2!=0:
+            arcade.draw_text("P2", 400,100,arcade.color.RED_DEVIL,30)
+        if self.p3_tab%2!=0:
+            arcade.draw_text("P3", 700,100,arcade.color.RED_DEVIL,30)
+        if self.p4_tab%2!=0:
+            arcade.draw_text("P4", 1000,100,arcade.color.RED_DEVIL,30)
+    
     def on_draw(self):
         arcade.start_render()
 #        print("In on draw is {}".format(self.current_state))
@@ -293,6 +322,12 @@ class Game_Window(arcade.Window):
         elif self.current_state == "welcome":
             arcade.set_background_color(arcade.color.BLACK)
             self.welcome()
+        elif self.current_state == "set_classic":
+            self.set_classic()
+        elif self.current_state == "set_survival":
+            self.set_survival()
+        elif self.current_state == "set_team":
+            self.set_team()
         elif self.current_state == "time_out":
             self.time_out()
         elif self.current_state == "vs_lose":
@@ -345,15 +380,86 @@ class Game_Window(arcade.Window):
                 self.point = 3
             else:
                 self.point+=1
+        #Classic Mode
         elif self.current_state == "interface" and key == arcade.key.ENTER and self.point == 1:
+            self.classic_tab=0
+            self.current_state = "set_classic"
+        elif self.current_state == "set_classic" and key == 49:
+            self.classic_tab+=1
+        elif self.current_state == "set_classic" and key == arcade.key.ENTER and self.classic_tab%2!=0:
             self.current_state = "setting_game"
+        #Survival Mode
         elif self.current_state == "interface" and key == arcade.key.ENTER and self.point == 2:
+            self.num_of_player = []
+            self.p1_tab=0
+            self.p2_tab=0
+            self.p3_tab=0
+            self.p4_tab=0
+            self.current_state = "set_survival"
+        elif self.current_state == "set_survival" and key == 49:
+            self.p1_tab+=1
+            if self.p1_tab%2!=0:
+                self.num_of_player.append(1)
+            elif self.p1_tab%2==0 and self.p1_tab!=0:
+                self.num_of_player.remove(1)
+        elif self.current_state == "set_survival" and key == 50:
+            self.p2_tab+=1
+            if self.p2_tab%2!=0:
+                self.num_of_player.append(2)
+            elif self.p2_tab%2==0 and self.p2_tab!=0:
+                self.num_of_player.remove(2)
+        elif self.current_state == "set_survival" and key == 51:
+            self.p3_tab+=1
+            if self.p3_tab%2!=0:
+                self.num_of_player.append(3)
+            elif self.p3_tab%2==0 and self.p3_tab!=0:
+                self.num_of_player.remove(3)
+        elif self.current_state == "set_survival" and key == 52:
+            self.p4_tab+=1
+            if self.p4_tab%2!=0:
+                self.num_of_player.append(4)
+            elif self.p4_tab%2==0 and self.p4_tab!=0:
+                self.num_of_player.remove(4)
+        elif self.current_state=="set_survival" and len(self.num_of_player) >= 2 and key == arcade.key.ENTER:
+            print(self.num_of_player)
+            print(len(self.num_of_player))
             self.current_state = "set_vs_game"
         #Team Mode
-        '''
+        
         elif self.current_state == "interface" and key == arcade.key.ENTER and self.point == 3:
-            self.current_state = "set_team_game"
-        '''
+            self.num_of_player = []
+            self.p1_tab=0
+            self.p2_tab=0
+            self.p3_tab=0
+            self.p4_tab=0
+            self.current_state = "set_team"
+        elif self.current_state == "set_team" and key == 49:
+            self.p1_tab+=1
+            if self.p1_tab%2!=0:
+                self.num_of_player.append(1)
+            elif self.p1_tab%2==0 and self.p1_tab!=0:
+                self.num_of_player.remove(1)
+        elif self.current_state == "set_team" and key == 50:
+            self.p2_tab+=1
+            if self.p2_tab%2!=0:
+                self.num_of_player.append(2)
+            elif self.p2_tab%2==0 and self.p2_tab!=0:
+                self.num_of_player.remove(2)
+        elif self.current_state == "set_team" and key == 51:
+            self.p3_tab+=1
+            if self.p3_tab%2!=0:
+                self.num_of_player.append(3)
+            elif self.p3_tab%2==0 and self.p3_tab!=0:
+                self.num_of_player.remove(3)
+        elif self.current_state == "set_team" and key == 52:
+            self.p4_tab+=1
+            if self.p4_tab%2!=0:
+                self.num_of_player.append(4)
+            elif self.p4_tab%2==0 and self.p4_tab!=0:
+                self.num_of_player.remove(4)
+        elif self.current_state=="set_team" and len(self.num_of_player)==4 and key == arcade.key.ENTER:
+            self.current_state = "set_vs_game"
+        
 
 if __name__ == '__main__':
     window = Game_Window(SCREEN_WIDTH, SCREEN_HIGHT)
