@@ -56,6 +56,8 @@ class Game_Window(arcade.Window):
         self.p2_tab = 0
         self.p3_tab = 0
         self.p4_tab = 0
+        self.classic_setting1 = arcade.load_texture("images/classic_setting1.png")
+        self.classic_setting2 = arcade.load_texture("images/classic_setting2.png")
             
     def update(self, data):
 #        print("Update_in_Game_Window")
@@ -158,7 +160,7 @@ class Game_Window(arcade.Window):
         output = "Do you have brain?"
         size = 40
         delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length +20, SCREEN_HIGHT/2+60, arcade.color.RED, size)
+        arcade.draw_text(output,SCREEN_WIDTH/2,500,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
 
         size = 25
         output = "{:0>2.0f}:{:0>2.0f}".format(self.map.knight_01.kill,self.map.knight_02.kill)
@@ -170,24 +172,40 @@ class Game_Window(arcade.Window):
         arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length - 20, SCREEN_HIGHT/2, arcade.color.RED, size)
         output = "Please enter to try again"
         delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH - 4*delete_length, (2*size), arcade.color.RED, size)
+        arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
 
     def vs_lose(self):
         output = "You all Lose"
         size = 50
         delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length  , SCREEN_HIGHT/2+60, arcade.color.RED, size)
+        #arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length  , SCREEN_HIGHT/2+60, arcade.color.RED, size)
+
+        arcade.draw_text(output,SCREEN_WIDTH/2,500,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        
         size = 25
-        output = "{:0>2.0f}:{:0>2.0f}".format(self.map.knight_01.kill,self.map.knight_02.kill)
-        delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length - 33, SCREEN_HIGHT/2 -50, arcade.color.RED, size)
+        #output = "{:0>2.0f}:{:0>2.0f}".format(self.map.knight_01.kill,self.map.knight_02.kill)
+        output = "{:0>2.0f}".format(self.map.knight_01.kill)
+        #delete_length = len(output)/2.5*size
+        arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "{:0>2.0f}".format(self.map.knight_02.kill)
+        #delete_length = len(output)/2.5*size
+        arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
         size = 20 
-        output = "Player01:Player02"
-        delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length - 20, SCREEN_HIGHT/2, arcade.color.RED, size)
+        output = "Player01"
+        #delete_length = len(output)/2.5*size
+        arcade.draw_text(output,SCREEN_WIDTH/4,375,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player02"
+        #delete_length = len(output)/2.5*size
+        arcade.draw_text(output,SCREEN_WIDTH/4+200,375,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player03"
+        #delete_length = len(output)/2.5*size
+        arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4-200,375,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player04"
+        #delete_length = len(output)/2.5*size
+        arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4,375,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
         output = "Please enter to try again"
         delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH - 4*delete_length, (2*size), arcade.color.RED, size)
+        arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
 
     def vs_win(self): 
         if self.map.knight_01.status == 2 and self.map.knight_02.status == 2:
@@ -206,19 +224,19 @@ class Game_Window(arcade.Window):
         else:
             size = 40
         delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length + 30 , SCREEN_HIGHT/2+60, arcade.color.RED, size)
+        arcade.draw_text(output,SCREEN_WIDTH/2,500,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
 
         size = 25
         output = "{:0>2.0f}:{:0>2.0f}".format(self.map.knight_01.kill,self.map.knight_02.kill)
         delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length - 33, SCREEN_HIGHT/2 -50, arcade.color.RED, size)
+        arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
         size = 20 
         output = "Player01:Player02"
         delete_length = len(output)/2.5*size
         arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length - 20, SCREEN_HIGHT/2, arcade.color.RED, size)
         output = "Please enter to try again"
         delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH - 4*delete_length, (2*size), arcade.color.RED, size)
+        arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
 
     def draw_win_game(self):
         output = "Congraturation!!!"
@@ -282,7 +300,10 @@ class Game_Window(arcade.Window):
     def set_classic(self):
         #arcade.draw_text("P1", SCREEN_WIDTH/2 -175,100,arcade.color.RED_DEVIL,30)
         if self.classic_tab%2!=0:
-            arcade.draw_text("P1", SCREEN_WIDTH/2 ,100,arcade.color.RED_DEVIL,30)
+            arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.classic_setting2)
+        else:
+            arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.classic_setting1)
+            
     def set_survival(self):
         if self.p1_tab%2!=0:
             arcade.draw_text("P1", 100,100,arcade.color.RED_DEVIL,30)
