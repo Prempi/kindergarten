@@ -18,10 +18,10 @@ def random_position_trap(array_map):
             continue
         trap_x = random.randint(0,limit_x)
         trap_y = random.randint(0,limit_y)
-        if (trap_x<3 and trap_y<3) or (trap_x>len(array_map[0])-4 and trap_y>len(array_map)-4):
+        if ((trap_x<3 and trap_y<3) or (trap_x>len(array_map[0])-4 and trap_y>len(array_map)-4) or (trap_x<3 and trap_y>len(array_map)-4) or (trap_x>len(array_map[0])-4 and trap_y<3)):
             continue
 #        print("trap_x : {} trap_y : {}".format(trap_x,trap_y))
-        if(array_map[trap_y][trap_x] != 1 and array_map[trap_y][trap_x] != 2):
+        if(array_map[trap_y][trap_x] not in [1,2,3,4]):
             None
         else:
             continue
@@ -32,7 +32,7 @@ def random_start_position_of_zombie(zombie_map):
     while True:
         random_x = random.randint(0,len(zombie_map[0])-1)
         random_y = random.randint(0,len(zombie_map)-1)
-        if (random_x < 4 and random_y < 4) or (random_x == len(zombie_map[0])-1 and random_y == len(zombie_map)-1) or (random_x > len(zombie_map[0])-4 and random_y > len(zombie_map)-4):
+        if ((random_x < 4 and random_y < 4) or (random_x > len(zombie_map[0])-4 and random_y > len(zombie_map)-4) or (random_x < 4 and random_y > len(zombie_map)-4) or (random_x > len(zombie_map[0])-4 and random_y < 4)):
             continue
         if zombie_map[random_y][random_x] == 0:
             return random_x, random_y
@@ -42,7 +42,7 @@ def random_position_of_wall(wall_map):
     while True:
         random_x = random.randint(0,len(wall_map[0])-1)
         random_y = random.randint(0,len(wall_map)-1)
-        if (random_x == 0 and random_y == 0) or (random_x > len(wall_map[0])-4 and random_y > len(wall_map)-4) or(random_x < 3 and random_y < 3):
+        if (random_x > len(wall_map[0])-4 and random_y > len(wall_map)-4) or (random_x < 3 and random_y < 3) or (random_x > len(wall_map[0])-4 and random_y < 3) or (random_x < 3 and random_y > len(wall_map)-4):
             continue
         count = 0
         for wall in wall_map[random_y][random_x]:
@@ -135,6 +135,8 @@ class VS_Map:
 #Set original Map
         self.plan_map[0][0] = 1
         self.plan_map[len(self.plan_map)-1][len(self.plan_map[0])-1] = 2
+        self.plan_map[0][len(self.plan_map[0])-1] = 4
+        self.plan_map[len(self.plan_map)-1][0] = 3
         print_map("Print set up map",self.plan_map) # check map
 
 #Set trap
@@ -268,8 +270,12 @@ class VS_Map:
                     arcade.draw_rectangle_filled(column*self.width+self.width/2+1,row*self.hight+self.hight/2,self.width-1,self.hight-1,arcade.color.GREEN)
                 elif row == 0 and column == 0:
                     arcade.draw_rectangle_filled(column*self.width+self.width/2+1,row*self.hight+self.hight/2,self.width-1,self.hight-1,arcade.color.OPERA_MAUVE)
+                elif row == 0 and column == len(self.plan_map[row])-1:
+                    arcade.draw_rectangle_filled(column*self.width+self.width/2+1,row*self.hight+self.hight/2,self.width-1,self.hight-1,arcade.color.CHARTREUSE)
+                elif row == len(self.plan_map)-1 and column == 0:
+                    arcade.draw_rectangle_filled(column*self.width+self.width/2+1,row*self.hight+self.hight/2,self.width-1,self.hight-1,arcade.color.COTTON_CANDY)
     def update_all_zombie(self):
-        for count in range(self.zombie):
+        for count in range(len(self.zombie)):
             if self.zombie[count].status == 1:
                 self.zombie[count].update()
         self.round += 1

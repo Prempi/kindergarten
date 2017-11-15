@@ -19,7 +19,7 @@ class Board:
         self.hight = SCREEN_HIGHT
         self.map = Map
         self.data = []
-        self.limit_data = 20
+        self.limit_data = 25
         self.standard_hight = 0
         self.event_hight = 0
         self.start_time = time.time()

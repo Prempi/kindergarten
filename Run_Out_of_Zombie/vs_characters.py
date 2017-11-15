@@ -28,7 +28,8 @@ class VS_Main_Character:
             self.world.check_only_black_hole()
             if self.world.main.current_state == "game_running":
                 self.world.update_all_zombie()
-            self.world.check_only_black_hole()
+            self.check_black_hole() 
+            self.check_zombie_on_map(2)
             self.check_hero()
 #            self.round += 1
 #            print("----------finish round {:>3.0f}----------".format(self.round))
@@ -39,7 +40,8 @@ class VS_Main_Character:
             self.world.check_only_black_hole()
             if self.world.main.current_state == "game_running":
                 self.world.update_all_zombie()
-            self.world.check_only_black_hole()
+            self.check_black_hole() 
+            self.check_zombie_on_map(2)
             self.check_hero()
 #            self.round += 1
 #            print("----------finish round {:>3.0f}----------".format(self.round))
