@@ -58,6 +58,16 @@ class Game_Window(arcade.Window):
         self.p4_tab = 0
         self.classic_setting1 = arcade.load_texture("images/classic_setting1.png")
         self.classic_setting2 = arcade.load_texture("images/classic_setting2.png")
+#  set about key
+        self.all_key = [119,97,100,115,116,102,103,104,65362,65361,65364,65363,106,105,107,108]
+        self.all_up = [119, 65362, 116, 105]
+        self.all_down = [115, 65364, 103, 107]
+        self.all_right = [100, 65363, 108, 104]
+        self.all_left = [97, 102, 65361, 106]
+        self.key_01 = [97,119,115,100]
+        self.key_02 = [65361, 65362, 65364, 65363]
+        self.key_03 = [102, 116, 103, 104]
+        self.key_04 = [106, 105, 107, 108]
   
     def update(self, data):
 #        print("Update_in_Game_Window")
@@ -70,7 +80,7 @@ class Game_Window(arcade.Window):
                 for column in range(NUM_COLUMN):
                     self.setup_map[row].append(0)
             self.map = VS_Map(SCREEN_WIDTH,SCREEN_HIGHT,WIDTH,HIGHT,self.setup_map,NUM_TRAP,NUM_ZOMBIE,NUM_WALL,SCREEN_MAP+10,self)
-            self.num_of_player = [4] # set number of player
+            self.num_of_player = [1] # set number of player
             self.map.create_knight(self.num_of_player)
             self.knight_01_sprite = Game_Character('images/Knight_02.png',knight=self.map.knight_01)
             self.knight_02_sprite = Game_Character('images/Knight.png',knight=self.map.knight_02)
@@ -117,7 +127,7 @@ class Game_Window(arcade.Window):
                     self.setup_map[row].append(0)
             self.map = VS_Map(SCREEN_WIDTH,SCREEN_HIGHT,WIDTH,HIGHT,self.setup_map,(NUM_TRAP*2)//3,NUM_ZOMBIE,NUM_WALL,SCREEN_MAP+10,self)
 #            print("Set map finish")
-            self.num_of_player = [1,2,3,4] # set number of player
+#            self.num_of_player = [1,2,3,4] # set number of player
             self.map.create_knight(self.num_of_player)
             self.knight_01_sprite = Game_Character('images/Knight_02.png',knight=self.map.knight_01)
             self.knight_02_sprite = Game_Character('images/Knight.png',knight=self.map.knight_02)
@@ -203,7 +213,6 @@ class Game_Window(arcade.Window):
         size = 40
         delete_length = len(output)/2.5*size
         arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length +20, SCREEN_HIGHT/2+60, arcade.color.RED, size)
-
         size = 25
         output = "{:0>2.0f}:{:0>2.0f}".format(self.map.knight_01.kill,self.map.knight_02.kill)
         delete_length = len(output)/2.5*size
@@ -228,19 +237,14 @@ class Game_Window(arcade.Window):
         arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
         size = 20
         output = "Player01"
-        #delete_length = len(output)/2.5*size
         arcade.draw_text(output,SCREEN_WIDTH/4,375,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
         output = "Player02"
-        #delete_length = len(output)/2.5*size
         arcade.draw_text(output,SCREEN_WIDTH/4+200,375,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
         output = "Player03"
-        #delete_length = len(output)/2.5*size
         arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4-200,375,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
         output = "Player04"
-        #delete_length = len(output)/2.5*size
         arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4,375,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
-        output = "Please enter to try again"
-        delete_length = len(output)/2.5*size
+        output = "Please any key to try again"
         arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
 
 
@@ -289,23 +293,9 @@ class Game_Window(arcade.Window):
         arcade.draw_text(output, SCREEN_WIDTH - 4*delete_length, (2*size), arcade.color.RED, 20)
 
     def draw_lose_game(self):
-#        size = 60
-#        delete_length = len(output)/2.5*size
         arcade.draw_text("Game Over", SCREEN_WIDTH/2, SCREEN_HIGHT/2 + 100, arcade.color.RED, 60, anchor_x = "center", anchor_y = "center", align = "center")
-#        delete_length = len(output)/2.5*size
         arcade.draw_text("You Lose", SCREEN_WIDTH/2, SCREEN_HIGHT/2, arcade.color.RED, 60, anchor_x="center", anchor_y="center", align="center")
         arcade.draw_text("Press enter to continue", SCREEN_WIDTH/2, SCREEN_HIGHT/2 - 80, arcade.color.RED, 20, anchor_x="center", anchor_y="center", align="center")
-
-#        if self.map.knight_01.status == 3:
-#            output = "Dead by Black Hole "
-#            size = 40
-#            delete_length = len(output)/2.5*size
-#            arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length + 55, SCREEN_HIGHT/2 - (3.5*size) + 10, arcade.color.RED, size)
-#        elif self.map.knight.status == 4:
-#            output = "Dead by Zombie "
-#            size = 40
-#            delete_length = len(output)//2.5*size
-#            arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length + 10 , SCREEN_HIGHT/2 - (3.5*size), arcade.color.RED, size)
 
     def interface(self):
         if self.point == 1:
@@ -318,7 +308,7 @@ class Game_Window(arcade.Window):
     def welcome(self):
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.background)
         if self.time<=30:
-            arcade.draw_text("Press ENTER to Start", SCREEN_WIDTH/2 -175,100,arcade.color.RED_DEVIL,30)
+            arcade.draw_text("Press any key to Start", SCREEN_WIDTH/2,100,arcade.color.RED_DEVIL,30, anchor_x = "center", anchor_y = "center", align = "center")
         if self.time>60:
             self.time=1
         self.time+=1
@@ -389,13 +379,8 @@ class Game_Window(arcade.Window):
         elif self.current_state == "vs_game":
             self.map.draw_grid()
             self.map.draw_wall()
-#            if self.map.knight_01.status == 1:
-#                self.knight_01_sprite.draw()
-#            if self.map.knight_02.status == 1:
-#                self.knight_02_sprite.draw()
             self.draw_knight()
             self.map.draw_trap()
-#            self.map.draw_zombie()
             count = 0
             while count < NUM_ZOMBIE:
                 if self.map.zombie[count].status == 1:
@@ -420,7 +405,7 @@ class Game_Window(arcade.Window):
         if key == 65307 and self.current_state == "welcome":
             exit(0)
             arcade.close_window()
-        elif key == arcade.key.ENTER and self.current_state == "welcome":
+        elif key in self.all_key and self.current_state == "welcome":
             arcade.set_background_color(arcade.color.WHITE)
             self.point = 1
             self.current_state = "interface"
@@ -430,29 +415,29 @@ class Game_Window(arcade.Window):
             self.map.on_key_press(key, key_modifiers)
         elif self.current_state == "vs_game":
             self.map.on_key_press(key, key_modifiers)
-        elif self.current_state in ["you_lose","you_win","time_out","vs_lose","vs_win"] and key == arcade.key.ENTER:
+        elif self.current_state in ["you_lose","you_win","time_out","vs_lose","vs_win"] and key in self.all_key:
             self.current_state = "interface"
             self.point = 1
-        elif self.current_state == "interface" and key == arcade.key.UP:
+        elif self.current_state == "interface" and key in self.all_up:
             if self.point == 1:
                 self.point = 1
             else:
                 self.point -= 1
-        elif self.current_state == "interface" and key == arcade.key.DOWN:
+        elif self.current_state == "interface" and key in self.all_down:
             if self.point==3:
                 self.point = 3
             else:
                 self.point+=1
 #Classic Mode
-        elif self.current_state == "interface" and key == arcade.key.ENTER and self.point == 1:
+        elif self.current_state == "interface" and key in [100, 65363, 104, 108] and self.point == 1:
             self.classic_tab=0
             self.current_state = "set_classic"
-        elif self.current_state == "set_classic" and key == 49:
+        elif self.current_state == "set_classic" and key == 119:
             self.classic_tab+=1
-        elif self.current_state == "set_classic" and key == arcade.key.ENTER and self.classic_tab%2!=0:
+        elif self.current_state == "set_classic" and key in [100, 65363, 104, 108] and self.classic_tab%2!=0:
             self.current_state = "setting_game"
 #Survival Mode
-        elif self.current_state == "interface" and key == arcade.key.ENTER and self.point == 2:
+        elif self.current_state == "interface" and key in [100, 65363, 104, 108] and self.point == 2:
             self.num_of_player = []
             self.p1_tab=0
             self.p2_tab=0
@@ -460,36 +445,36 @@ class Game_Window(arcade.Window):
             self.p4_tab=0
             self.current_state = "set_survival"
 #set number of player for survival mode
-        elif self.current_state == "set_survival" and key == 49:
+        elif self.current_state == "set_survival" and key == 119:
             self.p1_tab+=1
             if self.p1_tab%2!=0:
                 self.num_of_player.append(1)
             elif self.p1_tab%2==0 and self.p1_tab!=0:
                 self.num_of_player.remove(1)
-        elif self.current_state == "set_survival" and key == 50:
+        elif self.current_state == "set_survival" and key == 65362:
             self.p2_tab+=1
             if self.p2_tab%2!=0:
                 self.num_of_player.append(2)
             elif self.p2_tab%2==0 and self.p2_tab!=0:
                 self.num_of_player.remove(2)
-        elif self.current_state == "set_survival" and key == 51:
+        elif self.current_state == "set_survival" and key == 116:
             self.p3_tab+=1
             if self.p3_tab%2!=0:
                 self.num_of_player.append(3)
             elif self.p3_tab%2==0 and self.p3_tab!=0:
                 self.num_of_player.remove(3)
-        elif self.current_state == "set_survival" and key == 52:
+        elif self.current_state == "set_survival" and key == 105:
             self.p4_tab+=1
             if self.p4_tab%2!=0:
                 self.num_of_player.append(4)
             elif self.p4_tab%2==0 and self.p4_tab!=0:
                 self.num_of_player.remove(4)
-        elif self.current_state=="set_survival" and len(self.num_of_player) >= 2 and key == arcade.key.ENTER:
+        elif self.current_state=="set_survival" and len(self.num_of_player) >= 2 and key in [100, 65363, 104, 108]:
             print(self.num_of_player)
             print(len(self.num_of_player))
             self.current_state = "set_vs_game"
 #Team Mode
-        elif self.current_state == "interface" and key == arcade.key.ENTER and self.point == 3:
+        elif self.current_state == "interface" and key in [100, 65363, 104, 108] and self.point == 3:
             self.num_of_player = []
             self.p1_tab=0
             self.p2_tab=0
@@ -497,31 +482,31 @@ class Game_Window(arcade.Window):
             self.p4_tab=0
             self.current_state = "set_team"
 #set number of player for team mode
-        elif self.current_state == "set_team" and key == 49:
+        elif self.current_state == "set_team" and key == 119:
             self.p1_tab+=1
             if self.p1_tab%2!=0:
                 self.num_of_player.append(1)
             elif self.p1_tab%2==0 and self.p1_tab!=0:
                 self.num_of_player.remove(1)
-        elif self.current_state == "set_team" and key == 50:
+        elif self.current_state == "set_team" and key == 65362:
             self.p2_tab+=1
             if self.p2_tab%2!=0:
                 self.num_of_player.append(2)
             elif self.p2_tab%2==0 and self.p2_tab!=0:
                 self.num_of_player.remove(2)
-        elif self.current_state == "set_team" and key == 51:
+        elif self.current_state == "set_team" and key == 116:
             self.p3_tab+=1
             if self.p3_tab%2!=0:
                 self.num_of_player.append(3)
             elif self.p3_tab%2==0 and self.p3_tab!=0:
                 self.num_of_player.remove(3)
-        elif self.current_state == "set_team" and key == 52:
+        elif self.current_state == "set_team" and key == 105:
             self.p4_tab+=1
             if self.p4_tab%2!=0:
                 self.num_of_player.append(4)
             elif self.p4_tab%2==0 and self.p4_tab!=0:
                 self.num_of_player.remove(4)
-        elif self.current_state=="set_team" and len(self.num_of_player)==4 and key == arcade.key.ENTER:
+        elif self.current_state=="set_team" and len(self.num_of_player)==4 and key in self.all_right:
             self.current_state = "set_vs_game"
 
 if __name__ == '__main__':
