@@ -19,14 +19,14 @@ class Board:
         self.hight = SCREEN_HIGHT
         self.map = Map
         self.data = []
-        self.limit_data = 20
+        self.limit_data = 25
         self.standard_hight = 0
         self.event_hight = 0
         self.start_time = time.time()
 
 #Draw original detail    
     def standard_draw(self):
-        output = "Round : {:>3.0f}".format(self.map.knight.round)
+        output = "Round : {:>3.0f}".format(self.map.round)
         size = 16
         arcade.draw_text(output,self.width,self.hight - (size*2), arcade.color.BLACK, size)
         self.standard_hight = size*2
