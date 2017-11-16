@@ -58,6 +58,20 @@ class Game_Window(arcade.Window):
         self.p4_tab = 0
         self.classic_setting1 = arcade.load_texture("images/classic_setting1.png")
         self.classic_setting2 = arcade.load_texture("images/classic_setting2.png")
+        self.tns_setting = arcade.load_texture("images/team_n_survival_setting.png")
+        self.k1_sprite = arcade.Sprite('images/knightsp_01.png')
+        self.k1_sprite.set_position(150,150)
+        self.k2_sprite = arcade.Sprite('images/knightsp_02.png')
+        self.k2_sprite.set_position(SCREEN_WIDTH/4+160,160)
+        self.k3_sprite = arcade.Sprite('images/knightsp_03.png')
+        self.k3_sprite.set_position(SCREEN_WIDTH/2+160,160)
+        self.k4_sprite = arcade.Sprite('images/knightsp_04.png')
+        self.k4_sprite.set_position(3/4*SCREEN_WIDTH+170,170)
+        #self.k2_sprite = arcade.Sprite('images/Knight_02.png')
+
+    def draw(self):
+        self.sp_sprite.set_position(self.sp.x,self.sp.y)
+        self.sp_sprite.draw()
             
     def update(self, data):
 #        print("Update_in_Game_Window")
@@ -302,24 +316,27 @@ class Game_Window(arcade.Window):
             arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.classic_setting1)
             
     def set_survival(self):
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.tns_setting)
         if self.p1_tab%2!=0:
+            '''
             arcade.draw_text("P1", 100,100,arcade.color.RED_DEVIL,30)
+            '''
+            self.k1_sprite.draw()
         if self.p2_tab%2!=0:
+            '''
             arcade.draw_text("P2", 400,100,arcade.color.RED_DEVIL,30)
+            '''
+            self.k2_sprite.draw()
         if self.p3_tab%2!=0:
+            '''
             arcade.draw_text("P3", 700,100,arcade.color.RED_DEVIL,30)
+            '''
+            self.k3_sprite.draw()
         if self.p4_tab%2!=0:
-            arcade.draw_text("P4", 1000,100,arcade.color.RED_DEVIL,30)
-
-    def set_team(self):
-        if self.p1_tab%2!=0:
-            arcade.draw_text("P1", 100,100,arcade.color.RED_DEVIL,30)
-        if self.p2_tab%2!=0:
-            arcade.draw_text("P2", 400,100,arcade.color.RED_DEVIL,30)
-        if self.p3_tab%2!=0:
-            arcade.draw_text("P3", 700,100,arcade.color.RED_DEVIL,30)
-        if self.p4_tab%2!=0:
-            arcade.draw_text("P4", 1000,100,arcade.color.RED_DEVIL,30)
+            '''
+            arcade.draw_text("P3", 1100,100,arcade.color.RED_DEVIL,30)
+            '''
+            self.k4_sprite.draw()
     
     def on_draw(self):
         arcade.start_render()
@@ -350,7 +367,7 @@ class Game_Window(arcade.Window):
         elif self.current_state == "set_survival":
             self.set_survival()
         elif self.current_state == "set_team":
-            self.set_team()
+            self.set_survival()
         elif self.current_state == "time_out":
             self.time_out()
         elif self.current_state == "vs_lose":
