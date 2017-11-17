@@ -474,6 +474,11 @@ class Game_Window(arcade.Window):
                 self.point = 3
             else:
                 self.point+=1
+        elif self.current_state == "interface" and key in self.all_left:
+            self.current_state = "welcome"
+        elif self.current_state in ["set_classic","set_survival","set_team"] and key in self.all_left:
+            self.current_state = "interface"
+            self.point = 1
 #Classic Mode
         elif self.current_state == "interface" and key in [100, 65363, 104, 108] and self.point == 1:
             self.classic_tab=0
