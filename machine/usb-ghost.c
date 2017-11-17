@@ -7,7 +7,6 @@
 #include "pt/pt.h"
 
 #include "timer.h"
-#include "peri.h"
 #include "keycodes.h"
 
 #define REPORT_ID_KEYBOARD 1
@@ -183,10 +182,13 @@ uint16_t light;  // Updated by Light-Task; to be shared among threads
 
 // Protothread states
 struct pt main_pt;
-struct pt light_pt;
-struct pt haunting_pt;
-struct pt gamepad_pt;
 struct pt blink_pt;
+struct pt all_switch_pt;
+
+void init_peripheral(){
+    DDRC = 0b0111;
+    PORTC = 0b1000;
+}
 
 ////////////////////////////////////////////////////////////////
 // Automatically called by usbpoll() when host makes a request
@@ -213,30 +215,23 @@ void sendMouse(int8_t dx, int8_t dy, uint8_t buttons)
   usbSetInterrupt((uchar*)&reportMouse, sizeof(reportMouse));
 }
 
-//////////////////////////////////////////////////////////////
-PT_THREAD(light_task(struct pt *pt))
-{
-  PT_BEGIN(pt);
+PT_THREAD(all_switch_task(struct pt *pt)){
+    static uint32_t ts = 0;
+    PT_BEGIN(pt);
 
-  for (;;)
-  {
-    light = get_light();
+    for(;;){
+        if ((PINC & (1<<3))==0){
+            PORTC ^= 0b111;
+            sendKey(KEY_W,0);
+            PT_DELAY(pt,10,ts);
+        }
+        sendKey(KEY_NONE,0);
+        PT_DELAY(pt,10,ts);
+    }
 
-    // Set the LED corresponding to the current light level
-    if (light > LIGHT_HIGH_THRES)
-      set_led_value(0b100);
-    else if (light > LIGHT_LOW_THRES)
-      set_led_value(0b010);
-    else
-      set_led_value(0b001);
-
-    PT_YIELD(pt);
-  }
-
-  PT_END(pt);
+    PT_END(pt);
 }
 
-//////////////////////////////////////////////////////////////
 PT_THREAD(blink_task(struct pt *pt))
 {
   static uint32_t ts = 0;
@@ -256,80 +251,16 @@ PT_THREAD(blink_task(struct pt *pt))
   PT_END(pt);
 }
 
-//////////////////////////////////////////////////////////////
-PT_THREAD(haunting_task(struct pt *pt))
-{
-  static uint32_t ts = 0;
-  static uint8_t i;
-  static uint8_t sequence[] = {
-    KEY_P, KEY_R, KEY_A, KEY_C, KEY_T, KEY_I, KEY_C, KEY_U, KEY_M, KEY_SPACE,
-  };
-
-  PT_BEGIN(pt);
-
-  for (;;)
-  {
-    // Type the word 'Practicum'
-    for (i = 0; i < sizeof(sequence); i++)
-    {
-      // Wait until it's dark enough
-      PT_WAIT_UNTIL(pt,light<LIGHT_LOW_THRES);
-
-      // Press a shift key for the first key in the sequence
-      if (i == 0)
-        sendKey(sequence[i],KEY_MOD_LEFT_SHIFT);
-      else
-        sendKey(sequence[i],0);
-
-      PT_DELAY(pt,10,ts);
-
-      // Release key
-      sendKey(KEY_NONE,0);
-      PT_DELAY(pt,250,ts);
-    }
-
-    // Move the mouse cursor
-    for (i = 0; i < 30; i++)
-    {
-      // Wait until it's dark enough
-      PT_WAIT_UNTIL(pt,light<LIGHT_LOW_THRES);
-
-      // Make mouse go bottom-left
-      sendMouse(-5,5,0);
-      PT_DELAY(pt,100,ts);
-    }
-  }
-  
-  PT_END(pt);
-}
-
-//////////////////////////////////////////////////////////////
-PT_THREAD(gamepad_task(struct pt *pt))
-{
-  PT_BEGIN(pt);
-  reportGamepad.light = light;
-  reportGamepad.button = IS_SW_PRESSED();
-  usbSetInterrupt((uchar*)&reportGamepad, sizeof(reportGamepad));
-  PT_END(pt);
-}
-
-//////////////////////////////////////////////////////////////
 PT_THREAD(main_task(struct pt *pt))
 {
-  PT_BEGIN(pt);
+    PT_BEGIN(pt);
 
-  light_task(&light_pt);
-  blink_task(&blink_pt);
+    blink_task(&blink_pt);
+    all_switch_task(&all_switch_pt); 
 
-  PT_WAIT_UNTIL(pt,usbInterruptIsReady());
-  gamepad_task(&gamepad_pt);
-  PT_WAIT_UNTIL(pt,usbInterruptIsReady());
-  haunting_task(&haunting_pt);
-
-  PT_END(pt);
+    PT_END(pt);
 }
 
-//////////////////////////////////////////////////////////////
 int main()
 {
   // Initialize peripheral board and timer
@@ -347,22 +278,10 @@ int main()
   reportKeyboard.modifiers = 0;
   reportKeyboard.key_code = KEY_NONE;
 
-  reportMouse.report_id = REPORT_ID_MOUSE;
-  reportMouse.dx = 0;
-  reportMouse.dy = 0;
-  reportMouse.buttons = 0;
-
-  reportGamepad.report_id = REPORT_ID_GAMEPAD;
-  reportGamepad.light = 0;
-  reportGamepad.button = 0;
-
   // Initialize tasks
   PT_INIT(&main_pt);
-  PT_INIT(&light_pt);
-  PT_INIT(&haunting_pt);
-  PT_INIT(&gamepad_pt);
   PT_INIT(&blink_pt);
-
+  PT_INIT(&all_switch_pt);
   sei();
   for (;;)
   {
