@@ -281,19 +281,35 @@ class VS_Map:
         self.round += 1
 
     def on_key_press(self, key, key_modifiers):
-        if key == arcade.key.MOTION_DOWN:
-            self.knight_02.update(0,-1)
-        elif key == arcade.key.MOTION_UP:
-            self.knight_02.update(0,1)
-        elif key == arcade.key.MOTION_LEFT:
-            self.knight_02.update(-1,0)
-        elif key == arcade.key.MOTION_RIGHT:
-            self.knight_02.update(1,0)                
-        if key == arcade.key.S:
-            self.knight_01.update(0,-1)
-        elif key == arcade.key.W:
-            self.knight_01.update(0,1)
-        elif key == arcade.key.A:
+        if key == self.main.key_01[0]:
             self.knight_01.update(-1,0)
-        elif key == arcade.key.D:
-            self.knight_01.update(1,0)                
+        elif key == self.main.key_01[1]:
+            self.knight_01.update(0,1)
+        elif key == self.main.key_01[2]:
+            self.knight_01.update(0,-1)
+        elif key == self.main.key_01[3]:
+            self.knight_01.update(1,0)
+        elif key == self.main.key_02[0]:
+            self.knight_02.update(-1,0)
+        elif key == self.main.key_02[1]:
+            self.knight_02.update(0,1)
+        elif key == self.main.key_02[2]:
+            self.knight_02.update(0,-1)
+        elif key == self.main.key_02[3]:
+            self.knight_02.update(1,0)
+        elif key == self.main.key_03[0]:
+            self.knight_03.update(-1,0)
+        elif key == self.main.key_03[1]:
+            self.knight_03.update(0,1)
+        elif key == self.main.key_03[2]:
+            self.knight_03.update(0,-1)
+        elif key == self.main.key_03[3]:
+            self.knight_03.update(1,0)
+        elif key == self.main.key_04[0]:
+            self.knight_04.update(-1,0)
+        elif key == self.main.key_04[1]:
+            self.knight_04.update(0,1)
+        elif key == self.main.key_04[2]:
+            self.knight_04.update(0,-1)
+        elif key == self.main.key_04[3]:
+            self.knight_04.update(1,0)

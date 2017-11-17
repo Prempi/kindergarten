@@ -22,7 +22,7 @@ else:
 NUM_WALL = NUM_ROW*NUM_COLUMN*38//100
 
 NUM_ZOMBIE = NUM_ROW*NUM_COLUMN*26//100
-#NUM_ZOMBIE = 6
+NUM_ZOMBIE = 5
 class Game_Character(arcade.Sprite):
     def __init__(self, *location_of_picture, **character):
         self.knight = character.pop('knight', None)
@@ -155,16 +155,20 @@ class Game_Window(arcade.Window):
             self.map.knight_01.check_black_hole()
             self.map.knight_02.check_zombie_on_map(2)
             self.map.knight_02.check_black_hole()
+            self.map.knight_03.check_zombie_on_map(2)
+            self.map.knight_03.check_black_hole()
+            self.map.knight_04.check_zombie_on_map(2)
+            self.map.knight_04.check_black_hole()
 #            print("first time of in run out of Zombie")
 #            print("vs_game")
-            if self.map.knight_01.status == 2 or self.map.knight_02.status == 2:
+            if self.map.knight_01.status == 2 or self.map.knight_02.status == 2 or self.map.knight_03.status == 2 or self.map.knight_04.status == 2:
                 self.current_state = "vs_win"
-            elif self.map.knight_01.status in [3,4,5] and self.map.knight_02.status in [3,4,5] :
+            elif self.map.knight_01.status in [0,3,4,5] and self.map.knight_02.status in [0,3,4,5] and self.map.knight_03.status in [0,3,4,5] and self.map.knight_04.status in [0,3,4,5] and self.map.knight_04.status in [0,3,4,5] :
                 self.current_state = "vs_lose"
 #            if self.current_time - self.set_time >= 0.0001:
 # detail about update zombie 1 zombie per time
             self.map.zombie[self.num_zombie_update].update()
-            if self.map.zombie[self.num_zombie_update].seeing in [1,2]:
+            if self.map.zombie[self.num_zombie_update].seeing in [1,2,3,4]:
                 self.zombie_sprite[self.num_zombie_update] = Game_Character('images/Zombie_02.png',zombie=self.map.zombie[self.num_zombie_update])
             else:
                 self.zombie_sprite[self.num_zombie_update] = Game_Character('images/Zombie_01.png',zombie=self.map.zombie[self.num_zombie_update])
@@ -173,7 +177,7 @@ class Game_Window(arcade.Window):
                 self.num_zombie_update = 0
 # detail about update zombie 2 zombie per time
             self.map.zombie[self.num_zombie_update_02].update()
-            if self.map.zombie[self.num_zombie_update_02].seeing in [1,2]:
+            if self.map.zombie[self.num_zombie_update_02].seeing in [1,2,3,4]:
                 self.zombie_sprite[self.num_zombie_update_02] = Game_Character('images/Zombie_02.png',zombie=self.map.zombie[self.num_zombie_update_02])
             else:
                 self.zombie_sprite[self.num_zombie_update_02] = Game_Character('images/Zombie_01.png',zombie=self.map.zombie[self.num_zombie_update_02])
@@ -182,7 +186,7 @@ class Game_Window(arcade.Window):
                 self.num_zombie_update_02 = 0
 # detail about update zombie 3 zombie per time
             self.map.zombie[self.num_zombie_update_03].update()
-            if self.map.zombie[self.num_zombie_update_03].seeing in [1,2]:
+            if self.map.zombie[self.num_zombie_update_03].seeing in [1,2,3,4]:
                 self.zombie_sprite[self.num_zombie_update_03] = Game_Character('images/Zombie_02.png',zombie=self.map.zombie[self.num_zombie_update_03])
             else:
                 self.zombie_sprite[self.num_zombie_update_03] = Game_Character('images/Zombie_01.png',zombie=self.map.zombie[self.num_zombie_update_03])
@@ -191,7 +195,7 @@ class Game_Window(arcade.Window):
                 self.num_zombie_update_03 = 0
 # detail about update zombie 4 zombie per time
             self.map.zombie[self.num_zombie_update_04].update()
-            if self.map.zombie[self.num_zombie_update_04].seeing in [1,2]:
+            if self.map.zombie[self.num_zombie_update_04].seeing in [1,2,3,4]:
                 self.zombie_sprite[self.num_zombie_update_04] = Game_Character('images/Zombie_02.png',zombie=self.map.zombie[self.num_zombie_update_04])
             else:
                 self.zombie_sprite[self.num_zombie_update_04] = Game_Character('images/Zombie_01.png',zombie=self.map.zombie[self.num_zombie_update_04])
@@ -200,7 +204,7 @@ class Game_Window(arcade.Window):
                 self.num_zombie_update_04 = 0
 # detail about update zombie 5 zombie per time
             self.map.zombie[self.num_zombie_update_05].update()
-            if self.map.zombie[self.num_zombie_update_05].seeing in [1,2]:
+            if self.map.zombie[self.num_zombie_update_05].seeing in [1,2,3,4]:
                 self.zombie_sprite[self.num_zombie_update_05] = Game_Character('images/Zombie_02.png',zombie=self.map.zombie[self.num_zombie_update_05])
             else:
                 self.zombie_sprite[self.num_zombie_update_05] = Game_Character('images/Zombie_01.png',zombie=self.map.zombie[self.num_zombie_update_05])
@@ -231,10 +235,30 @@ class Game_Window(arcade.Window):
         delete_length = len(output)/2.5*size
         arcade.draw_text(output,SCREEN_WIDTH/2,500,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
         size = 25
-        output = "{:0>2.0f}".format(self.map.knight_01.kill)
-        arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
-        output = "{:0>2.0f}".format(self.map.knight_02.kill)
-        arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 1 in self.num_of_player :
+            output = "{:0>2.0f}".format(self.map.knight_01.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 2 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_02.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 3 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_03.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4*3 - 200,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4*3 - 200,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 4 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_04.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4*3,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4*3,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
         size = 20
         output = "Player01"
         arcade.draw_text(output,SCREEN_WIDTH/4,375,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")

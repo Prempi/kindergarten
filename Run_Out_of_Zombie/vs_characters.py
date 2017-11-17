@@ -49,16 +49,70 @@ class VS_Main_Character:
         self.real_y = 1 + self.pos_y*self.world.hight + self.world.hight/2
 
     def check_hero(self):
-        if self.id == 1 and self.pos_x == self.world.knight_02.pos_x and self.pos_y == self.world.knight_02.pos_y and self.world.knight_02.status == 1:
-            self.world.knight_02.status = 5
-            self.world.board.event_data("-----------------------------------------")    
-            self.world.board.event_data("     Player 01 Kill Player 02     ")    
-            self.world.board.event_data("-----------------------------------------")    
-        elif self.id == 2 and self.pos_x == self.world.knight_01.pos_x and self.pos_y == self.world.knight_01.pos_y and self.world.knight_01.status == 1:
-            self.world.knight_01.status = 5
-            self.world.board.event_data("-----------------------------------------")    
-            self.world.board.event_data("     Player 02 Kill Player 01     ")    
-            self.world.board.event_data("-----------------------------------------")    
+        if self.id == 1 :
+            if self.pos_x == self.world.knight_02.pos_x and self.pos_y == self.world.knight_02.pos_y and self.world.knight_02.status == 1:
+                self.world.knight_02.status = 5
+                self.world.board.event_data("-----------------------------------------")    
+                self.world.board.event_data("     Player 01 Kill Player 02     ")    
+                self.world.board.event_data("-----------------------------------------")    
+            elif self.pos_x == self.world.knight_03.pos_x and self.pos_y == self.world.knight_03.pos_y and self.world.knight_03.status == 1:
+                self.world.knight_03.status = 5
+                self.world.board.event_data("-----------------------------------------")    
+                self.world.board.event_data("     Player 01 Kill Player 03     ")    
+                self.world.board.event_data("-----------------------------------------")    
+            elif self.pos_x == self.world.knight_04.pos_x and self.pos_y == self.world.knight_04.pos_y and self.world.knight_04.status == 1:
+                self.world.knight_04.status = 5
+                self.world.board.event_data("-----------------------------------------")    
+                self.world.board.event_data("     Player 01 Kill Player 04     ")    
+                self.world.board.event_data("-----------------------------------------")    
+        elif self.id == 2 :
+            if self.pos_x == self.world.knight_01.pos_x and self.pos_y == self.world.knight_01.pos_y and self.world.knight_01.status == 1:
+                self.world.knight_01.status = 5
+                self.world.board.event_data("-----------------------------------------")    
+                self.world.board.event_data("     Player 02 Kill Player 01     ")    
+                self.world.board.event_data("-----------------------------------------")    
+            elif self.pos_x == self.world.knight_03.pos_x and self.pos_y == self.world.knight_03.pos_y and self.world.knight_03.status == 1:
+                self.world.knight_03.status = 5
+                self.world.board.event_data("-----------------------------------------")    
+                self.world.board.event_data("     Player 02 Kill Player 03     ")    
+                self.world.board.event_data("-----------------------------------------")    
+            elif self.pos_x == self.world.knight_04.pos_x and self.pos_y == self.world.knight_04.pos_y and self.world.knight_04.status == 1:
+                self.world.knight_04.status = 5
+                self.world.board.event_data("-----------------------------------------")    
+                self.world.board.event_data("     Player 02 Kill Player 04     ")    
+                self.world.board.event_data("-----------------------------------------")    
+        elif self.id == 3 :
+            if self.pos_x == self.world.knight_02.pos_x and self.pos_y == self.world.knight_02.pos_y and self.world.knight_02.status == 1:
+                self.world.knight_02.status = 5
+                self.world.board.event_data("-----------------------------------------")    
+                self.world.board.event_data("     Player 03 Kill Player 02     ")    
+                self.world.board.event_data("-----------------------------------------")    
+            elif self.pos_x == self.world.knight_01.pos_x and self.pos_y == self.world.knight_01.pos_y and self.world.knight_01.status == 1:
+                self.world.knight_01.status = 5
+                self.world.board.event_data("-----------------------------------------")    
+                self.world.board.event_data("     Player 03 Kill Player 01     ")    
+                self.world.board.event_data("-----------------------------------------")    
+            elif self.pos_x == self.world.knight_04.pos_x and self.pos_y == self.world.knight_04.pos_y and self.world.knight_04.status == 1:
+                self.world.knight_04.status = 5
+                self.world.board.event_data("-----------------------------------------")    
+                self.world.board.event_data("     Player 03 Kill Player 04     ")    
+                self.world.board.event_data("-----------------------------------------")    
+        elif self.id == 4 :
+            if self.pos_x == self.world.knight_02.pos_x and self.pos_y == self.world.knight_02.pos_y and self.world.knight_02.status == 1:
+                self.world.knight_02.status = 5
+                self.world.board.event_data("-----------------------------------------")    
+                self.world.board.event_data("     Player 04 Kill Player 02     ")    
+                self.world.board.event_data("-----------------------------------------")    
+            elif self.pos_x == self.world.knight_03.pos_x and self.pos_y == self.world.knight_03.pos_y and self.world.knight_03.status == 1:
+                self.world.knight_03.status = 5
+                self.world.board.event_data("-----------------------------------------")    
+                self.world.board.event_data("     Player 04 Kill Player 03     ")    
+                self.world.board.event_data("-----------------------------------------")    
+            elif self.pos_x == self.world.knight_01.pos_x and self.pos_y == self.world.knight_01.pos_y and self.world.knight_01.status == 1:
+                self.world.knight_01.status = 5
+                self.world.board.event_data("-----------------------------------------")    
+                self.world.board.event_data("     Player 04 Kill Player 01     ")    
+                self.world.board.event_data("-----------------------------------------")    
 
     def check_wall(self, movement_x, movement_y):
         if movement_x == -1 and self.world.wall_map[self.pos_y][self.pos_x][0] == 1:
@@ -130,16 +184,21 @@ class VS_Zombie_Character:
 
     def update(self):
         self.world.check_only_black_hole()
-        if self.find_main_character(1) and self.find_main_character(2):
-            self.seeing = (random.randint(1,100)%2)+1
-            self.picture = arcade.Sprite("images/Zombie_02.png")
-        elif self.find_main_character(1):
+        if self.find_main_character(1):
 #            print("Zombie see you before move")
             self.seeing = 1
             self.picture = arcade.Sprite("images/Zombie_02.png")
         elif self.find_main_character(2):
 #            print("Zombie see you before move")
             self.seeing = 2
+            self.picture = arcade.Sprite("images/Zombie_02.png")
+        elif self.find_main_character(3):
+#            print("Zombie see you before move")
+            self.seeing = 3
+            self.picture = arcade.Sprite("images/Zombie_02.png")
+        elif self.find_main_character(4):
+#            print("Zombie see you before move")
+            self.seeing = 4
             self.picture = arcade.Sprite("images/Zombie_02.png")
         else:
             self.seeing = 0
@@ -231,14 +290,11 @@ class VS_Zombie_Character:
             self.real_y = 1 + self.pos_y*self.world.hight + self.world.hight/2
             self.real_x = 1 + self.pos_x*self.world.width + self.world.width/2
         elif self.seeing == 2:
-#            print("Zombie move mode find you")
             distance_x = self.world.knight_02.pos_x - self.pos_x
             distance_y = self.world.knight_02.pos_y - self.pos_y
-#            print("{} {} {}   {} {} {}".format(distance_x , self.world.knight.pos_x , self.pos_x ,distance_y , self.world.knight.pos_y , self.pos_y))
             if distance_x != 0 and distance_y != 0:
                 random_way = random.randint(1,100)%2
                 if random_way == 0:
-#                    print("random_way is {}".format(random_way))
                     if distance_x < 0 and self.check_wall(-1,0) and self.check_zombie_team(-1,0):  
                         self.pos_x -= 1
                     elif distance_x > 0 and self.check_wall(1,0) and self.check_zombie_team(1,0):
@@ -257,7 +313,6 @@ class VS_Zombie_Character:
                     elif distance_x > 0 and self.check_wall(1,0) and self.check_zombie_team(1,0):
                         self.pos_x += 1
                 else:
-#                    print("don't move")
                     None
             elif distance_x == 0:
                 if distance_y < 0 and self.check_wall(0,-1) and self.check_zombie_team(0,-1):
@@ -265,7 +320,6 @@ class VS_Zombie_Character:
                 elif distance_y > 0 and self.check_wall(0,1) and self.check_zombie_team(0,1):
                     self.pos_y += 1
                 else:
-#                    print("don't move")
                     None
             elif distance_y == 0:
                 if distance_x < 0 and self.check_wall(-1,0) and self.check_zombie_team(-1,0):
@@ -273,7 +327,88 @@ class VS_Zombie_Character:
                 elif distance_x > 0 and self.check_wall(1,0) and self.check_zombie_team(1,0):
                     self.pos_x += 1
                 else:
-#                    print("don't move")
+                    None
+            self.real_y = 1 + self.pos_y*self.world.hight + self.world.hight/2
+            self.real_x = 1 + self.pos_x*self.world.width + self.world.width/2
+        elif self.seeing == 3:
+            distance_x = self.world.knight_03.pos_x - self.pos_x
+            distance_y = self.world.knight_03.pos_y - self.pos_y
+            if distance_x != 0 and distance_y != 0:
+                random_way = random.randint(1,100)%2
+                if random_way == 0:
+                    if distance_x < 0 and self.check_wall(-1,0) and self.check_zombie_team(-1,0):  
+                        self.pos_x -= 1
+                    elif distance_x > 0 and self.check_wall(1,0) and self.check_zombie_team(1,0):
+                        self.pos_x += 1
+                    elif distance_y < 0 and self.check_wall(0,-1) and self.check_zombie_team(0,-1):
+                        self.pos_y -= 1
+                    elif distance_y > 0 and self.check_wall(0,1) and self.check_zombie_team(0,1):
+                        self.pos_y += 1   
+                elif random_way == 1:
+                    if distance_y < 0 and self.check_wall(0,-1) and self.check_zombie_team(0,-1):
+                        self.pos_y -= 1
+                    elif distance_y > 0 and self.check_wall(0,1) and self.check_zombie_team(0,1):
+                        self.pos_y += 1   
+                    elif distance_x < 0 and self.check_wall(-1,0) and self.check_zombie_team(-1,0):  
+                        self.pos_x -= 1
+                    elif distance_x > 0 and self.check_wall(1,0) and self.check_zombie_team(1,0):
+                        self.pos_x += 1
+                else:
+                    None
+            elif distance_x == 0:
+                if distance_y < 0 and self.check_wall(0,-1) and self.check_zombie_team(0,-1):
+                     self.pos_y -= 1
+                elif distance_y > 0 and self.check_wall(0,1) and self.check_zombie_team(0,1):
+                    self.pos_y += 1
+                else:
+                    None
+            elif distance_y == 0:
+                if distance_x < 0 and self.check_wall(-1,0) and self.check_zombie_team(-1,0):
+                     self.pos_x -= 1
+                elif distance_x > 0 and self.check_wall(1,0) and self.check_zombie_team(1,0):
+                    self.pos_x += 1
+                else:
+                    None
+            self.real_y = 1 + self.pos_y*self.world.hight + self.world.hight/2
+            self.real_x = 1 + self.pos_x*self.world.width + self.world.width/2
+        elif self.seeing == 4:
+            distance_x = self.world.knight_04.pos_x - self.pos_x
+            distance_y = self.world.knight_04.pos_y - self.pos_y
+            if distance_x != 0 and distance_y != 0:
+                random_way = random.randint(1,100)%2
+                if random_way == 0:
+                    if distance_x < 0 and self.check_wall(-1,0) and self.check_zombie_team(-1,0):  
+                        self.pos_x -= 1
+                    elif distance_x > 0 and self.check_wall(1,0) and self.check_zombie_team(1,0):
+                        self.pos_x += 1
+                    elif distance_y < 0 and self.check_wall(0,-1) and self.check_zombie_team(0,-1):
+                        self.pos_y -= 1
+                    elif distance_y > 0 and self.check_wall(0,1) and self.check_zombie_team(0,1):
+                        self.pos_y += 1   
+                elif random_way == 1:
+                    if distance_y < 0 and self.check_wall(0,-1) and self.check_zombie_team(0,-1):
+                        self.pos_y -= 1
+                    elif distance_y > 0 and self.check_wall(0,1) and self.check_zombie_team(0,1):
+                        self.pos_y += 1   
+                    elif distance_x < 0 and self.check_wall(-1,0) and self.check_zombie_team(-1,0):  
+                        self.pos_x -= 1
+                    elif distance_x > 0 and self.check_wall(1,0) and self.check_zombie_team(1,0):
+                        self.pos_x += 1
+                else:
+                    None
+            elif distance_x == 0:
+                if distance_y < 0 and self.check_wall(0,-1) and self.check_zombie_team(0,-1):
+                     self.pos_y -= 1
+                elif distance_y > 0 and self.check_wall(0,1) and self.check_zombie_team(0,1):
+                    self.pos_y += 1
+                else:
+                    None
+            elif distance_y == 0:
+                if distance_x < 0 and self.check_wall(-1,0) and self.check_zombie_team(-1,0):
+                     self.pos_x -= 1
+                elif distance_x > 0 and self.check_wall(1,0) and self.check_zombie_team(1,0):
+                    self.pos_x += 1
+                else:
                     None
             self.real_y = 1 + self.pos_y*self.world.hight + self.world.hight/2
             self.real_x = 1 + self.pos_x*self.world.width + self.world.width/2
@@ -286,6 +421,12 @@ class VS_Zombie_Character:
             self.seeing = 2
             self.picture = arcade.Sprite("images/Zombie_02.png")
 #            print("Zombie see you after move")
+        elif self.find_main_character(3):
+            self.seeing = 3
+            self.picture = arcade.Sprite("images/Zombie_02.png")
+        elif self.find_main_character(4):
+            self.seeing = 4
+            self.picture = arcade.Sprite("images/Zombie_02.png")
         else:
             self.seeing = 0
             self.picture = arcade.Sprite("images/Zombie_01.png")
@@ -303,6 +444,16 @@ class VS_Zombie_Character:
                 return False
             distance_pos_x = self.world.knight_02.pos_x - self.pos_x
             distance_pos_y = self.world.knight_02.pos_y - self.pos_y
+        elif id_knight == 3:
+            if self.world.knight_03.status != 1:
+                return False
+            distance_pos_x = self.world.knight_03.pos_x - self.pos_x
+            distance_pos_y = self.world.knight_03.pos_y - self.pos_y
+        elif id_knight == 4:
+            if self.world.knight_04.status != 1:
+                return False
+            distance_pos_x = self.world.knight_04.pos_x - self.pos_x
+            distance_pos_y = self.world.knight_04.pos_y - self.pos_y
 #        print("{} {} {}   {} {} {}".format(distance_pos_x , self.world.knight.pos_x , self.pos_x ,distance_pos_y , self.world.knight.pos_y , self.pos_y))
         if distance_pos_x == 0 and distance_pos_y == 0:
             return True
