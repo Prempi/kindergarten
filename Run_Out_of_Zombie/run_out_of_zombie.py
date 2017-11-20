@@ -58,6 +58,7 @@ class Game_Window(arcade.Window):
         self.p4_tab = 0
         self.classic_setting1 = arcade.load_texture("images/classic_setting1.png")
         self.classic_setting2 = arcade.load_texture("images/classic_setting2.png")
+        self.gg = arcade.load_texture("images/gameover_background.png")
 #  set about key
         self.all_key = [119,97,100,115,116,102,103,104,65362,65361,65364,65363,106,105,107,108]
         self.all_up = [119, 65362, 116, 105]
@@ -223,97 +224,173 @@ class Game_Window(arcade.Window):
                 self.num_zombie_update_05 = 0
 
     def time_out(self):
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.gg)
         output = "Do you have brain?"
         size = 40
         delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length +20, SCREEN_HIGHT/2+60, arcade.color.RED, size)
-        size = 25
-        output = "{:0>2.0f}:{:0>2.0f}".format(self.map.knight_01.kill,self.map.knight_02.kill)
-        delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length - 33, SCREEN_HIGHT/2 -50, arcade.color.RED, size)
-        size = 20 
-        output = "Player01:Player02"
-        delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length - 20, SCREEN_HIGHT/2, arcade.color.RED, size)
-        output = "Please enter to try again"
-        delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH - 4*delete_length, (2*size), arcade.color.RED, size)
-
-    def vs_lose(self):
-        output = "You all Lose"
-        size = 50
-        delete_length = len(output)/2.5*size
-        arcade.draw_text(output,SCREEN_WIDTH/2,500,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        arcade.draw_text(output,SCREEN_WIDTH/2,500,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         size = 25
         if 1 in self.num_of_player :
             output = "{:0>2.0f}".format(self.map.knight_01.kill)
-            arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+            arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         else:
             output = "--"
-            arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+            arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         if 2 in self.num_of_player:
             output = "{:0>2.0f}".format(self.map.knight_02.kill)
-            arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+            arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         else:
             output = "--"
-            arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+            arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         if 3 in self.num_of_player:
             output = "{:0>2.0f}".format(self.map.knight_03.kill)
-            arcade.draw_text(output,SCREEN_WIDTH/4*3 - 200,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+            arcade.draw_text(output,SCREEN_WIDTH/4*3 - 200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         else:
             output = "--"
-            arcade.draw_text(output,SCREEN_WIDTH/4*3 - 200,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+            arcade.draw_text(output,SCREEN_WIDTH/4*3 - 200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         if 4 in self.num_of_player:
             output = "{:0>2.0f}".format(self.map.knight_04.kill)
-            arcade.draw_text(output,SCREEN_WIDTH/4*3,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+            arcade.draw_text(output,SCREEN_WIDTH/4*3,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         else:
             output = "--"
-            arcade.draw_text(output,SCREEN_WIDTH/4*3,275,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+            arcade.draw_text(output,SCREEN_WIDTH/4*3,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         size = 20
         output = "Player01"
-        arcade.draw_text(output,SCREEN_WIDTH/4,375,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        arcade.draw_text(output,SCREEN_WIDTH/4,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         output = "Player02"
-        arcade.draw_text(output,SCREEN_WIDTH/4+200,375,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        arcade.draw_text(output,SCREEN_WIDTH/4+200,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         output = "Player03"
-        arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4-200,375,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4-200,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         output = "Player04"
-        arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4,375,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
-        output = "Please any key to try again"
-        arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.BLACK, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Press any key to try again"
+        arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
 
 
-    def vs_win(self): 
-        if self.map.knight_01.status == 2 and self.map.knight_02.status == 2:
-            if self.map.knight_01.kill > self.map.knight_02.kill:
+        
+
+    def vs_lose(self):
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.gg)
+        output = "You all Lose"
+        size = 50
+        delete_length = len(output)/2.5*size
+        arcade.draw_text(output,SCREEN_WIDTH/2,500,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        size = 25
+        if 1 in self.num_of_player :
+            output = "{:0>2.0f}".format(self.map.knight_01.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 2 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_02.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 3 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_03.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4*3 - 200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4*3 - 200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 4 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_04.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4*3,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4*3,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        size = 20
+        output = "Player01"
+        arcade.draw_text(output,SCREEN_WIDTH/4,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player02"
+        arcade.draw_text(output,SCREEN_WIDTH/4+200,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player03"
+        arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4-200,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player04"
+        arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Press any key to try again"
+        arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+
+
+    def vs_win(self):
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.gg)
+        if self.map.knight_01.status == 3 or self.map.knight_02.status == 2 and self.map.knight_03.status == 2 and self.map.knight_04.status == 2:
+            if self.map.knight_01.kill > self.map.knight_02.kill and self.map.knight_01.kill > self.map.knight_03.kill and self.map.knight_01.kill > self.map.knight_04.kill:
                 output = "Player 1 is winner"
-            elif self.map.knight_02.kill > self.map.knight_01.kill:
+            elif self.map.knight_02.kill > self.map.knight_01.kill and self.map.knight_02.kill > self.map.knight_03.kill and self.map.knight_02.kill > self.map.knight_04.kill:
                 output = "Player 2 is winner"
+            elif self.map.knight_03.kill > self.map.knight_01.kill and self.map.knight_03.kill > self.map.knight_02.kill and self.map.knight_03.kill > self.map.knight_04.kill:
+                output = "Player 3 is winner"
+            elif self.map.knight_04.kill > self.map.knight_01.kill and self.map.knight_04.kill > self.map.knight_02.kill and self.map.knight_04.kill > self.map.knight_03.kill:
+                output = "Player 4 is winner"
             else:
-                output = "Draw"
+                output = "draw"
         elif self.map.knight_01.status == 2:
             output = "Player 1 is winner"
-        else:
+        elif self.map.knight_02.status == 2:
             output = "Player 2 is winner"
-        if output == "Draw":
+        elif self.map.knight_03.status == 2:
+            output = "Player 3 is winner"
+        elif self.map.knight_04.status == 2:
+            output = "Player 4 is winner"
+
+        '''
+        if output == "draw":
             size = 60
         else:
             size = 40
-        delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length + 30 , SCREEN_HIGHT/2+60, arcade.color.RED, size)
-
+        '''
+        size = 40
+        #delete_length = len(output)/2.5*size
+        arcade.draw_text(output,SCREEN_WIDTH/2,500,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         size = 25
-        output = "{:0>2.0f}:{:0>2.0f}".format(self.map.knight_01.kill,self.map.knight_02.kill)
-        delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length - 33, SCREEN_HIGHT/2 -50, arcade.color.RED, size)
-        size = 20 
-        output = "Player01:Player02"
-        delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH/2 - delete_length - 20, SCREEN_HIGHT/2, arcade.color.RED, size)
-        output = "Please enter to try again"
-        delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH - 4*delete_length, (2*size), arcade.color.RED, size)
+        if 1 in self.num_of_player :
+            output = "{:0>2.0f}".format(self.map.knight_01.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 2 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_02.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 3 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_03.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4*3 - 200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4*3 - 200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 4 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_04.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4*3,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4*3,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        size = 20
+        output = "Player01"
+        arcade.draw_text(output,SCREEN_WIDTH/4,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player02"
+        arcade.draw_text(output,SCREEN_WIDTH/4+200,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player03"
+        arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4-200,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player04"
+        arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Press enter to continue"
+        arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+
+
+    '''
+    def team_win(self):
+        
+
+    def team_lose(self):
+    '''     
 
     def draw_win_game(self):
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.gg)
         output = "Congraturation!!!"
         size = 60
         delete_length = len(output)//2.5*size
@@ -321,12 +398,14 @@ class Game_Window(arcade.Window):
         output = "You Win"
         delete_length = len(output)//2.5*size
         arcade.draw_text(output, SCREEN_WIDTH/2 - 200, SCREEN_HIGHT/2- (3*size/2), arcade.color.RED, 60)
-        output = "Please enter to try again"
+        output = "Press enter to continue"
         size = 20
         delete_length = len(output)/2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH - 4*delete_length, (2*size), arcade.color.RED, 20)
+        arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+
 
     def draw_lose_game(self):
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.gg)
         arcade.draw_text("Game Over", SCREEN_WIDTH/2, SCREEN_HIGHT/2 + 100, arcade.color.RED, 60, anchor_x = "center", anchor_y = "center", align = "center")
         arcade.draw_text("You Lose", SCREEN_WIDTH/2, SCREEN_HIGHT/2, arcade.color.RED, 60, anchor_x="center", anchor_y="center", align="center")
         arcade.draw_text("Press enter to continue", SCREEN_WIDTH/2, SCREEN_HIGHT/2 - 80, arcade.color.RED, 20, anchor_x="center", anchor_y="center", align="center")
@@ -448,20 +527,18 @@ class Game_Window(arcade.Window):
 
     def on_key_press(self, key, key_modifiers):
         print(key)
-        if key == 65307 and self.current_state == "welcome":
+        if key in self.all_left and self.current_state == "welcome":
             exit(0)
             arcade.close_window()
         elif key in self.all_key and self.current_state == "welcome":
             arcade.set_background_color(arcade.color.WHITE)
             self.point = 1
             self.current_state = "interface"
-        elif key == 65307:
-            self.current_state = "welcome"
         elif self.current_state == "game_running":
             self.map.on_key_press(key, key_modifiers)
         elif self.current_state == "vs_game":
             self.map.on_key_press(key, key_modifiers)
-        elif self.current_state in ["you_lose","you_win","time_out","vs_lose","vs_win"] and key in self.all_key:
+        elif self.current_state in ["you_lose","you_win","time_out","vs_lose","vs_win"] and key in self.all_right:
             self.current_state = "interface"
             self.point = 1
         elif self.current_state == "interface" and key in self.all_up:
