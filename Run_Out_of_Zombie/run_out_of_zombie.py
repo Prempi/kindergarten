@@ -315,7 +315,7 @@ class Game_Window(arcade.Window):
 
     def vs_win(self):
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.gg)
-        if self.map.knight_01.status == 3 or self.map.knight_02.status == 2 and self.map.knight_03.status == 2 and self.map.knight_04.status == 2:
+        if self.map.knight_01.status == 2 and self.map.knight_02.status == 2 and self.map.knight_03.status == 2 and self.map.knight_04.status == 2:
             if self.map.knight_01.kill > self.map.knight_02.kill and self.map.knight_01.kill > self.map.knight_03.kill and self.map.knight_01.kill > self.map.knight_04.kill:
                 output = "Player 1 is winner"
             elif self.map.knight_02.kill > self.map.knight_01.kill and self.map.knight_02.kill > self.map.knight_03.kill and self.map.knight_02.kill > self.map.knight_04.kill:
@@ -334,14 +334,10 @@ class Game_Window(arcade.Window):
             output = "Player 3 is winner"
         elif self.map.knight_04.status == 2:
             output = "Player 4 is winner"
-
-        '''
         if output == "draw":
             size = 60
         else:
             size = 40
-        '''
-        size = 40
         #delete_length = len(output)/2.5*size
         arcade.draw_text(output,SCREEN_WIDTH/2,500,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         size = 25
