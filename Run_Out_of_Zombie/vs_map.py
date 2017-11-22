@@ -21,7 +21,7 @@ def random_position_trap(array_map):
         if ((trap_x<3 and trap_y<3) or (trap_x>len(array_map[0])-4 and trap_y>len(array_map)-4) or (trap_x<3 and trap_y>len(array_map)-4) or (trap_x>len(array_map[0])-4 and trap_y<3)):
             continue
 #        print("trap_x : {} trap_y : {}".format(trap_x,trap_y))
-        if(array_map[trap_y][trap_x] not in [1,2,3,4]):
+        if(array_map[trap_y][trap_x] not in [1,2,3,4,5]):
             None
         else:
             continue
@@ -137,6 +137,8 @@ class VS_Map:
         self.plan_map[len(self.plan_map)-1][len(self.plan_map[0])-1] = 2
         self.plan_map[0][len(self.plan_map[0])-1] = 4
         self.plan_map[len(self.plan_map)-1][0] = 3
+        if self.main.current_state == "set_team_game":
+            self.plan_map[6][8] = 5
         print_map("Print set up map",self.plan_map) # check map
 
 #Set trap
@@ -199,22 +201,40 @@ class VS_Map:
         print_map_array("Print set up wall map after add wall",self.wall_map) # check wall map
 
     def create_knight(self, number_of_knight):
-        if 1 in number_of_knight:
-            self.knight_01 = VS_Main_Character(self, 0, 0,2,1,1)
+        if self.main.current_state != "set_team_game":
+            if 1 in number_of_knight:
+                self.knight_01 = VS_Main_Character(self, 0, 0,2,1,1)
+            else:
+                self.knight_01 = VS_Main_Character(self, 0, 0,2,1,0)
+            if 2 in number_of_knight:
+                self.knight_02 = VS_Main_Character(self, len(self.plan_map[0])-1,len(self.plan_map)-1,1,2,1)
+            else:
+                self.knight_02 = VS_Main_Character(self, len(self.plan_map[0])-1,len(self.plan_map)-1,1,2,0)
+            if 3 in number_of_knight:
+                self.knight_03 = VS_Main_Character(self, 0, len(self.plan_map)-1,4,3,1)
+            else:
+                self.knight_03 = VS_Main_Character(self, 0, len(self.plan_map)-1,4,3,0)
+            if 4 in number_of_knight:
+                self.knight_04 = VS_Main_Character(self, len(self.plan_map[0])-1,0,3,4,1)
+            else:
+                self.knight_04 = VS_Main_Character(self, len(self.plan_map[0])-1,0,3,4,0)
         else:
-            self.knight_01 = VS_Main_Character(self, 0, 0,2,1,0)
-        if 2 in number_of_knight:
-            self.knight_02 = VS_Main_Character(self, len(self.plan_map[0])-1,len(self.plan_map)-1,1,2,1)
-        else:
-            self.knight_02 = VS_Main_Character(self, len(self.plan_map[0])-1,len(self.plan_map)-1,1,2,0)
-        if 3 in number_of_knight:
-            self.knight_03 = VS_Main_Character(self, 0, len(self.plan_map)-1,4,3,1)
-        else:
-            self.knight_03 = VS_Main_Character(self, 0, len(self.plan_map)-1,4,3,0)
-        if 4 in number_of_knight:
-            self.knight_04 = VS_Main_Character(self, len(self.plan_map[0])-1,0,3,4,1)
-        else:
-            self.knight_04 = VS_Main_Character(self, len(self.plan_map[0])-1,0,3,4,0)
+            if 1 in number_of_knight:
+                self.knight_01 = VS_Main_Character(self, 0, 0,5,1,1)
+            else:
+                self.knight_01 = VS_Main_Character(self, 0, 0,5,1,0)
+            if 2 in number_of_knight:
+                self.knight_02 = VS_Main_Character(self, len(self.plan_map[0])-1,len(self.plan_map)-1,5,2,1)
+            else:
+                self.knight_02 = VS_Main_Character(self, len(self.plan_map[0])-1,len(self.plan_map)-1,5,2,0)
+            if 3 in number_of_knight:
+                self.knight_03 = VS_Main_Character(self, 0, len(self.plan_map)-1,5,3,1)
+            else:
+                self.knight_03 = VS_Main_Character(self, 0, len(self.plan_map)-1,5,3,0)
+            if 4 in number_of_knight:
+                self.knight_04 = VS_Main_Character(self, len(self.plan_map[0])-1,0,5,4,1)
+            else:
+                self.knight_04 = VS_Main_Character(self, len(self.plan_map[0])-1,0,5,4,0)
 
 #Draw wall
     def draw_wall(self):
@@ -274,6 +294,9 @@ class VS_Map:
                     arcade.draw_rectangle_filled(column*self.width+self.width/2+1,row*self.hight+self.hight/2,self.width-1,self.hight-1,arcade.color.CHARTREUSE)
                 elif row == len(self.plan_map)-1 and column == 0:
                     arcade.draw_rectangle_filled(column*self.width+self.width/2+1,row*self.hight+self.hight/2,self.width-1,self.hight-1,arcade.color.COTTON_CANDY)
+                elif row == 6 and column == 8 and self.main.current_state == "team_game":                    
+                    arcade.draw_rectangle_filled(column*self.width+self.width/2+1,row*self.hight+self.hight/2,self.width-1,self.hight-1,arcade.color.WHITE)
+ 
     def update_all_zombie(self):
         for count in range(len(self.zombie)):
             if self.zombie[count].status == 1:

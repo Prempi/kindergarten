@@ -21,7 +21,7 @@ class VS_Main_Character:
         self.check_zombie_on_map(2)
         self.check_black_hole() 
         print("move is %i and %i"%(movement_x,movement_y))
-        if self.pos_x + movement_x > -1 and self.pos_x + movement_x < self.limit_x and movement_x != 0 and self.check_wall(movement_x, movement_y) and self.status == 1:
+        if self.check_myteam(movement_x, movement_y) and self.pos_x + movement_x > -1 and self.pos_x + movement_x < self.limit_x and movement_x != 0 and self.check_wall(movement_x, movement_y) and self.status == 1:
             self.pos_x += movement_x
             self.check_map()
             self.check_zombie_on_map(1)
@@ -33,7 +33,7 @@ class VS_Main_Character:
             self.check_hero()
 #            self.round += 1
 #            print("----------finish round {:>3.0f}----------".format(self.round))
-        elif self.pos_y + movement_y > -1 and self.pos_y + movement_y < self.limit_y and movement_y != 0 and self.check_wall(movement_x, movement_y) and self.status == 1:
+        elif self.check_myteam(movement_x, movement_y) and self.pos_y + movement_y > -1 and self.pos_y + movement_y < self.limit_y and movement_y != 0 and self.check_wall(movement_x, movement_y) and self.status == 1:
             self.pos_y += movement_y
             self.check_map() 
             self.check_zombie_on_map(1) 
@@ -47,6 +47,21 @@ class VS_Main_Character:
 #            print("----------finish round {:>3.0f}----------".format(self.round))
         self.real_x = 1 + self.pos_x*self.world.width + self.world.width/2
         self.real_y = 1 + self.pos_y*self.world.hight + self.world.hight/2
+
+    def check_myteam(self, x, y):
+        if self.world.main.current_state == "team_game":
+            if self.id == 1 and self.world.knight_03.pos_x == self.pos_x + x and self.world.knight_03.pos_y == self.pos_y + y:
+                return False
+            elif self.id == 3 and self.world.knight_01.pos_x == self.pos_x + x and self.world.knight_01.pos_y == self.pos_y + y:
+                return False
+            elif self.id == 4 and self.world.knight_02.pos_x == self.pos_x + x and self.world.knight_02.pos_y == self.pos_y + y:
+                return False
+            elif self.id == 2 and self.world.knight_04.pos_x == self.pos_x + x and self.world.knight_04.pos_y == self.pos_y + y:
+                return False
+            else:
+                return True 
+        else:
+            return True
 
     def check_hero(self):
         if self.id == 1 :

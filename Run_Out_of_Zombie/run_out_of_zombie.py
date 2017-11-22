@@ -3,8 +3,8 @@ import arcade, arcade.key, time
 from detail_of_board import Board
 from vs_map import VS_Map
 
-NUM_ROW = 14
-NUM_COLUMN = 18
+NUM_ROW = 13
+NUM_COLUMN = 17
 
 WIDTH = 51
 HIGHT = 51
@@ -14,14 +14,14 @@ SCREEN_HIGHT = NUM_ROW * HIGHT +1
 SCREEN_MAP = NUM_COLUMN * WIDTH + 1
 
 if NUM_COLUMN*NUM_ROW >=50:
-    NUM_TRAP = NUM_ROW*NUM_COLUMN*60//100
+    NUM_TRAP = NUM_ROW*NUM_COLUMN*50//100
     NUM_TRAP += NUM_TRAP%6
 else:
     NUM_TRAP = NUM_ROW*NUM_COLUMN*5//100
 
 NUM_WALL = NUM_ROW*NUM_COLUMN*38//100
 
-NUM_ZOMBIE = NUM_ROW*NUM_COLUMN*26//100
+NUM_ZOMBIE = NUM_ROW*NUM_COLUMN*20//100
 #NUM_ZOMBIE = 5
 class Game_Character(arcade.Sprite):
     def __init__(self, *location_of_picture, **character):
@@ -223,6 +223,100 @@ class Game_Window(arcade.Window):
             if self.num_zombie_update_05 == NUM_ZOMBIE:
                 self.num_zombie_update_05 = 0
 
+        elif self.current_state == "set_team_game":
+            print("set_vs_Game")
+            self.setup_map= []
+            for row in range(NUM_ROW):
+                self.setup_map.append([])
+                for column in range(NUM_COLUMN):
+                    self.setup_map[row].append(0)
+            self.map = VS_Map(SCREEN_WIDTH,SCREEN_HIGHT,WIDTH,HIGHT,self.setup_map,(NUM_TRAP*2)//3,NUM_ZOMBIE,NUM_WALL,SCREEN_MAP+10,self)
+#            print("Set map finish")
+#            self.num_of_player = [1,2,3,4] # set number of player
+            self.map.create_knight(self.num_of_player)
+            self.knight_01_sprite = Game_Character('images/Knight_02.png',knight=self.map.knight_01)
+            self.knight_02_sprite = Game_Character('images/Knight.png',knight=self.map.knight_02)
+            self.knight_03_sprite = Game_Character('images/Knight_03.png',knight=self.map.knight_03)
+            self.knight_04_sprite = Game_Character('images/Knight_04.png',knight=self.map.knight_04)
+            self.zombie_sprite = []
+            for count in range(NUM_ZOMBIE):
+                self.zombie_sprite.append(Game_Character('images/Zombie_01.png',zombie=self.map.zombie[count]))
+#            print("Have all Zombie")
+            self.current_state = "team_game"
+            self.start_time = time.time()
+            self.set_time = self.start_time
+            self.num_zombie_update = 0
+            self.num_zombie_update_02 = (NUM_ZOMBIE)//2
+            self.num_zombie_update_03 = (NUM_ZOMBIE)//3
+            self.num_zombie_update_04 = (NUM_ZOMBIE)//4
+            self.num_zombie_update_05 = (NUM_ZOMBIE)//5
+#            print("finish set_vs_game")
+
+        elif self.current_state == "team_game":
+            self.current_time = time.time() 
+            if self.current_time - self.start_time > 31:
+                self.current_state = "time_out"
+            self.map.knight_01.check_zombie_on_map(2)
+            self.map.knight_01.check_black_hole()
+            self.map.knight_02.check_zombie_on_map(2)
+            self.map.knight_02.check_black_hole()
+            self.map.knight_03.check_zombie_on_map(2)
+            self.map.knight_03.check_black_hole()
+            self.map.knight_04.check_zombie_on_map(2)
+            self.map.knight_04.check_black_hole()
+#            print("first time of in run out of Zombie")
+#            print("vs_game")
+            if self.map.knight_01.status == 2 or self.map.knight_02.status == 2 or self.map.knight_03.status == 2 or self.map.knight_04.status == 2:
+                self.current_state = "team_win"
+            elif self.map.knight_01.status in [0,3,4,5] and self.map.knight_02.status in [0,3,4,5] and self.map.knight_03.status in [0,3,4,5] and self.map.knight_04.status in [0,3,4,5] and self.map.knight_04.status in [0,3,4,5] :
+                self.current_state = "team_lose"
+#            if self.current_time - self.set_time >= 0.0001:
+# detail about update zombie 1 zombie per time
+            self.map.zombie[self.num_zombie_update].update()
+            if self.map.zombie[self.num_zombie_update].seeing in [1,2,3,4]:
+                self.zombie_sprite[self.num_zombie_update] = Game_Character('images/Zombie_02.png',zombie=self.map.zombie[self.num_zombie_update])
+            else:
+                self.zombie_sprite[self.num_zombie_update] = Game_Character('images/Zombie_01.png',zombie=self.map.zombie[self.num_zombie_update])
+            self.num_zombie_update += 1
+            if self.num_zombie_update == NUM_ZOMBIE:
+                self.num_zombie_update = 0
+# detail about update zombie 2 zombie per time
+            self.map.zombie[self.num_zombie_update_02].update()
+            if self.map.zombie[self.num_zombie_update_02].seeing in [1,2,3,4]:
+                self.zombie_sprite[self.num_zombie_update_02] = Game_Character('images/Zombie_02.png',zombie=self.map.zombie[self.num_zombie_update_02])
+            else:
+                self.zombie_sprite[self.num_zombie_update_02] = Game_Character('images/Zombie_01.png',zombie=self.map.zombie[self.num_zombie_update_02])
+            self.num_zombie_update_02 += 1
+            if self.num_zombie_update_02 == NUM_ZOMBIE:
+                self.num_zombie_update_02 = 0
+# detail about update zombie 3 zombie per time
+            self.map.zombie[self.num_zombie_update_03].update()
+            if self.map.zombie[self.num_zombie_update_03].seeing in [1,2,3,4]:
+                self.zombie_sprite[self.num_zombie_update_03] = Game_Character('images/Zombie_02.png',zombie=self.map.zombie[self.num_zombie_update_03])
+            else:
+                self.zombie_sprite[self.num_zombie_update_03] = Game_Character('images/Zombie_01.png',zombie=self.map.zombie[self.num_zombie_update_03])
+            self.num_zombie_update_03 += 1
+            if self.num_zombie_update_03 == NUM_ZOMBIE:
+                self.num_zombie_update_03 = 0
+# detail about update zombie 4 zombie per time
+            self.map.zombie[self.num_zombie_update_04].update()
+            if self.map.zombie[self.num_zombie_update_04].seeing in [1,2,3,4]:
+                self.zombie_sprite[self.num_zombie_update_04] = Game_Character('images/Zombie_02.png',zombie=self.map.zombie[self.num_zombie_update_04])
+            else:
+                self.zombie_sprite[self.num_zombie_update_04] = Game_Character('images/Zombie_01.png',zombie=self.map.zombie[self.num_zombie_update_04])
+            self.num_zombie_update_04 += 1
+            if self.num_zombie_update_04 == NUM_ZOMBIE:
+                self.num_zombie_update_04 = 0
+# detail about update zombie 5 zombie per time
+            self.map.zombie[self.num_zombie_update_05].update()
+            if self.map.zombie[self.num_zombie_update_05].seeing in [1,2,3,4]:
+                self.zombie_sprite[self.num_zombie_update_05] = Game_Character('images/Zombie_02.png',zombie=self.map.zombie[self.num_zombie_update_05])
+            else:
+                self.zombie_sprite[self.num_zombie_update_05] = Game_Character('images/Zombie_01.png',zombie=self.map.zombie[self.num_zombie_update_05])
+            self.num_zombie_update_05 += 1
+            if self.num_zombie_update_05 == NUM_ZOMBIE:
+                self.num_zombie_update_05 = 0
+
     def time_out(self):
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.gg)
         output = "Do you have brain?"
@@ -266,9 +360,6 @@ class Game_Window(arcade.Window):
         output = "Press any key to try again"
         arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
 
-
-        
-
     def vs_lose(self):
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.gg)
         output = "You all Lose"
@@ -309,9 +400,8 @@ class Game_Window(arcade.Window):
         arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4-200,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         output = "Player04"
         arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
-        output = "Press any key to try again"
+        output = "Press any key to continue"
         arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
-
 
     def vs_win(self):
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.gg)
@@ -374,27 +464,121 @@ class Game_Window(arcade.Window):
         arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4-200,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         output = "Player04"
         arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
-        output = "Press enter to continue"
+        output = "Press any key to continue"
         arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
 
 
-    '''
     def team_win(self):
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.gg)
+        if (self.map.knight_01.status == 2 or self.map.knight_03.status == 2) and (self.map.knight_02.status == 2 or self.map.knight_04.status == 2 ):
+            if self.map.knight_01.kill + self.map.knight_03.kill > self.map.knight_02.kill + self.map.knight_04.kill:
+                output = "Team 1 is winner"
+            elif self.map.knight_01.kill + self.map.knight_03.kill < self.map.knight_02.kill + self.map.knight_04.kill:
+                output = "Team 2 is winner"
+            else:
+                output = "draw"
+        elif self.map.knight_01.status == 2 or self.map.knight_03.status == 2:
+            output = "Team 1 is winner"
+        elif self.map.knight_02.status == 2 or self.map.knight_04.status == 2:
+            output = "Team 2 is winner"
+        if output == "draw":
+            size = 60
+        else:
+            size = 40
+        #delete_length = len(output)/2.5*size
+        arcade.draw_text(output,SCREEN_WIDTH/2,500,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        size = 25
+        if 1 in self.num_of_player :
+            output = "{:0>2.0f}".format(self.map.knight_01.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 3 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_03.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 2 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_02.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4*3 - 200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4*3 - 200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 4 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_04.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4*3,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4*3,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        size = 20
+        output = "Player01"
+        arcade.draw_text(output,SCREEN_WIDTH/4,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player03"
+        arcade.draw_text(output,SCREEN_WIDTH/4+200,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player02"
+        arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4-200,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player04"
+        arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Press any key to continue"
+        arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         
 
     def team_lose(self):
-    '''     
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.gg)
+        output = "You all Lose"
+        size = 50
+        delete_length = len(output)/2.5*size
+        arcade.draw_text(output,SCREEN_WIDTH/2,500,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        size = 25
+        if 1 in self.num_of_player :
+            output = "{:0>2.0f}".format(self.map.knight_01.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 3 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_03.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4+200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 2 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_02.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4*3 - 200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4*3 - 200,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        if 4 in self.num_of_player:
+            output = "{:0>2.0f}".format(self.map.knight_04.kill)
+            arcade.draw_text(output,SCREEN_WIDTH/4*3,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        else:
+            output = "--"
+            arcade.draw_text(output,SCREEN_WIDTH/4*3,275,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        size = 20
+        output = "Player01"
+        arcade.draw_text(output,SCREEN_WIDTH/4,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player03"
+        arcade.draw_text(output,SCREEN_WIDTH/4+200,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player02"
+        arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4-200,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Player04"
+        arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+        output = "Press any key to continue"
+        arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
+
 
     def draw_win_game(self):
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.gg)
         output = "Congraturation!!!"
         size = 60
         delete_length = len(output)//2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH/2 - 300, SCREEN_HIGHT/2, arcade.color.RED, size)
+        arcade.draw_text(output, SCREEN_WIDTH/2 - 300, SCREEN_HIGHT/2, arcade.color.RED, size, anchor_x = "center" ,  anchor_y = "center", align = "center")
         output = "You Win"
         delete_length = len(output)//2.5*size
-        arcade.draw_text(output, SCREEN_WIDTH/2 - 200, SCREEN_HIGHT/2- (3*size/2), arcade.color.RED, 60)
-        output = "Press enter to continue"
+        arcade.draw_text(output, SCREEN_WIDTH/2 - 200, SCREEN_HIGHT/2- (3*size/2), arcade.color.RED, 60 , anchor_x = "center" ,anchor_y="center", align="center")
+        output = "Press any key to continue"
         size = 20
         delete_length = len(output)/2.5*size
         arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
@@ -404,7 +588,7 @@ class Game_Window(arcade.Window):
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.gg)
         arcade.draw_text("Game Over", SCREEN_WIDTH/2, SCREEN_HIGHT/2 + 100, arcade.color.RED, 60, anchor_x = "center", anchor_y = "center", align = "center")
         arcade.draw_text("You Lose", SCREEN_WIDTH/2, SCREEN_HIGHT/2, arcade.color.RED, 60, anchor_x="center", anchor_y="center", align="center")
-        arcade.draw_text("Press enter to continue", SCREEN_WIDTH/2, SCREEN_HIGHT/2 - 80, arcade.color.RED, 20, anchor_x="center", anchor_y="center", align="center")
+        arcade.draw_text("Press any key to continue", SCREEN_WIDTH/2, SCREEN_HIGHT/2 - 80, arcade.color.RED, 20, anchor_x="center", anchor_y="center", align="center")
 
     def interface(self):
         if self.point == 1:
@@ -493,11 +677,28 @@ class Game_Window(arcade.Window):
             self.set_survival()
         elif self.current_state == "time_out":
             self.time_out()
+        elif self.current_state == "team_lose":
+            self.team_lose()
         elif self.current_state == "vs_lose":
             self.vs_lose()
         elif self.current_state == "vs_win":
             self.vs_win()
+        elif self.current_state == "team_win":
+            self.team_win()
         elif self.current_state == "vs_game":
+            self.map.draw_grid()
+            self.map.draw_wall()
+            self.draw_knight()
+            self.map.draw_trap()
+            count = 0
+            while count < NUM_ZOMBIE:
+                if self.map.zombie[count].status == 1:
+                    self.zombie_sprite[count].draw()
+                count += 1
+            self.map.set_up = 0
+            self.map.board.vs_standard_draw()
+            self.map.board.event_draw()            
+        elif self.current_state == "team_game":
             self.map.draw_grid()
             self.map.draw_wall()
             self.draw_knight()
@@ -523,7 +724,9 @@ class Game_Window(arcade.Window):
 
     def on_key_press(self, key, key_modifiers):
         print(key)
-        if key in self.all_left and self.current_state == "welcome":
+        if key == 65307:
+            self.current_state = "interface"
+        elif key in self.all_left and self.current_state == "welcome":
             exit(0)
             arcade.close_window()
         elif key in self.all_key and self.current_state == "welcome":
@@ -534,7 +737,9 @@ class Game_Window(arcade.Window):
             self.map.on_key_press(key, key_modifiers)
         elif self.current_state == "vs_game":
             self.map.on_key_press(key, key_modifiers)
-        elif self.current_state in ["you_lose","you_win","time_out","vs_lose","vs_win"] and key in self.all_right:
+        elif self.current_state == "team_game":
+            self.map.on_key_press(key, key_modifiers)
+        elif self.current_state in ["you_lose","you_win","time_out","vs_lose","vs_win","team_win","team_lose"] and key in self.all_key:
             self.current_state = "interface"
             self.point = 1
         elif self.current_state == "interface" and key in self.all_up:
@@ -631,7 +836,7 @@ class Game_Window(arcade.Window):
             elif self.p4_tab%2==0 and self.p4_tab!=0:
                 self.num_of_player.remove(4)
         elif self.current_state=="set_team" and len(self.num_of_player)==4 and key in self.all_right:
-            self.current_state = "set_vs_game"
+            self.current_state = "set_team_game"
 
 if __name__ == '__main__':
     window = Game_Window(SCREEN_WIDTH, SCREEN_HIGHT)
