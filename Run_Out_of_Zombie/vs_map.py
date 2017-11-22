@@ -6,7 +6,7 @@ from detail_of_board import Board
 # random trap and key of trap
 def random_position_trap(array_map):
     limit_y = len(array_map) - 1
-    limit_x = len(array_map[0]) -1 
+    limit_x = len(array_map[0]) -1
 #    print("limit_x : {} limit_y : {}".format(limit_x,limit_y))
     while True:
         switch_x = random.randint(0,limit_x)
@@ -77,7 +77,7 @@ def random_position_of_wall(wall_map):
             if count > 2:
                 continue
         return random_x, random_y, random_wall
-        
+
 def print_map(text,array_map):
     print(text)
     row = len(array_map) - 1
@@ -187,13 +187,13 @@ class VS_Map:
             print(data)
             self.wall_map[data[1]][data[0]][data[2]] = 1
             if data[2] == 0 and data[0] != 0:
-                self.wall_map[data[1]][data[0]-1][3] = 1    
+                self.wall_map[data[1]][data[0]-1][3] = 1
             elif data[2] == 3 and data[0] != len(self.wall_map[0])-1 :
                 self.wall_map[data[1]][data[0]+1][0] = 1
             elif data[2] == 1 and data[1] != len(self.wall_map)-1:
                 self.wall_map[data[1]+1][data[0]][2] = 1
             elif data[2] == 2 and data[1] != 0:
-                self.wall_map[data[1]-1][data[0]][1] = 1 
+                self.wall_map[data[1]-1][data[0]][1] = 1
 
         print_map("Print set up map after add trap",self.plan_map) # check map
         print_key("Print key of trap",self.trap_keys) # 0 is row 1 is column 3 has two value 0 close 1 open
@@ -242,14 +242,14 @@ class VS_Map:
             for column in range(len(self.wall_map[row])):
                 for count in range(len(self.wall_map[row][column])):
                     if(self.wall_map[row][column][count] == 1 and count == 0):
-                        arcade.draw_line(column*self.width+1,row*self.hight+1,column*self.width+1,(row+1)*self.hight+1,arcade.color.BRICK_RED,2)  
+                        arcade.draw_line(column*self.width+1,row*self.hight+1,column*self.width+1,(row+1)*self.hight+1,arcade.color.BRICK_RED,2)
                     if(self.wall_map[row][column][count] == 1 and count == 3):
-                        arcade.draw_line((column+1)*self.width,row*self.hight+1,(column+1)*self.width,(row+1)*self.hight+1,arcade.color.BRICK_RED,2)  
+                        arcade.draw_line((column+1)*self.width,row*self.hight+1,(column+1)*self.width,(row+1)*self.hight+1,arcade.color.BRICK_RED,2)
                     if(self.wall_map[row][column][count] == 1 and count == 1):
-                        arcade.draw_line(column*self.width+1,(row+1)*self.hight+1,(column+1)*self.width+1,(row+1)*self.hight+1,arcade.color.BRICK_RED,2)  
+                        arcade.draw_line(column*self.width+1,(row+1)*self.hight+1,(column+1)*self.width+1,(row+1)*self.hight+1,arcade.color.BRICK_RED,2)
                     if(self.wall_map[row][column][count] == 1 and count == 2):
-                        arcade.draw_line(column*self.width+1,row*self.hight+1,(column+1)*self.width+1,row*self.hight+1,arcade.color.BRICK_RED,2)  
-        
+                        arcade.draw_line(column*self.width+1,row*self.hight+1,(column+1)*self.width+1,row*self.hight+1,arcade.color.BRICK_RED,2)
+
 # Open or Close Trap
     def open_or_close(self, import_key, who,pos_x,pos_y):
         data_of_key = self.trap_keys[import_key]
@@ -257,15 +257,15 @@ class VS_Map:
         for test_key in self.trap_keys.keys():
             if data_of_key[0] == self.trap_keys[test_key][0] and data_of_key[1] == self.trap_keys[test_key][1]:
                 same_target.append(test_key)
-        sum_score = 1 
+        sum_score = 1
         for collect_key in same_target:
             sum_score += self.trap_keys[collect_key][2]
             self.trap_keys[collect_key][2] = 0
         sum_score = sum_score % 2
         self.trap_keys[same_target[0]][2] = sum_score
-        if sum_score == 0: 
+        if sum_score == 0:
             self.board.event_data("Trap at ({},{}) close by ".format(data_of_key[0]+1,data_of_key[1]+1) + who + " at ({},{})".format(pos_x+1,pos_y+1))
-        if sum_score == 1: 
+        if sum_score == 1:
             self.board.event_data("Trap at ({},{}) open by ".format(data_of_key[0]+1,data_of_key[1]+1) + who + " at ({},{})".format(pos_x+1,pos_y+1))
 
 # Check all black hole for Zombie
@@ -281,7 +281,7 @@ class VS_Map:
             if self.trap_keys[count+11][2] == 1:
                 self.trap[count].draw()
             count += 1
-        
+
     def draw_grid(self):
         for row in range(len(self.plan_map)):
             for column in range(len(self.plan_map[row])):
@@ -294,9 +294,9 @@ class VS_Map:
                     arcade.draw_rectangle_filled(column*self.width+self.width/2+1,row*self.hight+self.hight/2,self.width-1,self.hight-1,arcade.color.CHARTREUSE)
                 elif row == len(self.plan_map)-1 and column == 0:
                     arcade.draw_rectangle_filled(column*self.width+self.width/2+1,row*self.hight+self.hight/2,self.width-1,self.hight-1,arcade.color.COTTON_CANDY)
-                elif row == 6 and column == 8 and self.main.current_state == "team_game":                    
-                    arcade.draw_rectangle_filled(column*self.width+self.width/2+1,row*self.hight+self.hight/2,self.width-1,self.hight-1,arcade.color.WHITE)
- 
+                elif row == 6 and column == 8 and self.main.current_state == "team_game":
+                    arcade.draw_rectangle_filled(column*self.width+self.width/2+1,row*self.hight+self.hight/2,self.width-1,self.hight-1,arcade.color.RED_DEVIL)
+
     def update_all_zombie(self):
         for count in range(len(self.zombie)):
             if self.zombie[count].status == 1:

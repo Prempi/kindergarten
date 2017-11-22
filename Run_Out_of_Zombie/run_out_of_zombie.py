@@ -9,7 +9,7 @@ NUM_COLUMN = 17
 WIDTH = 51
 HIGHT = 51
 SCREEN_BOARD = 350
-SCREEN_WIDTH = NUM_COLUMN * WIDTH +1 +SCREEN_BOARD 
+SCREEN_WIDTH = NUM_COLUMN * WIDTH +1 +SCREEN_BOARD
 SCREEN_HIGHT = NUM_ROW * HIGHT +1
 SCREEN_MAP = NUM_COLUMN * WIDTH + 1
 
@@ -79,7 +79,7 @@ class Game_Window(arcade.Window):
         self.k3_sprite.set_position(SCREEN_WIDTH/2+160,160)
         self.k4_sprite = arcade.Sprite('images/knightsp_04.png')
         self.k4_sprite.set_position(3/4*SCREEN_WIDTH+170,170)
-  
+
     def update(self, data):
 #        print("Update_in_Game_Window")
         if self.current_state == "setting_game":
@@ -101,7 +101,7 @@ class Game_Window(arcade.Window):
             for count in range(NUM_ZOMBIE):
                 self.zombie_sprite.append(Game_Character('images/Zombie_01.png',zombie=self.map.zombie[count]))
             self.current_state = "game_running"
-            
+
         elif self.current_state == "game_running":
             if 1 == self.num_of_player[0]:
                 if self.map.knight_01.status == 2:
@@ -159,7 +159,7 @@ class Game_Window(arcade.Window):
 #            print("finish set_vs_game")
 
         elif self.current_state == "vs_game":
-            self.current_time = time.time() 
+            self.current_time = time.time()
             if self.current_time - self.start_time > 31:
                 self.current_state = "time_out"
             self.map.knight_01.check_zombie_on_map(2)
@@ -253,7 +253,7 @@ class Game_Window(arcade.Window):
 #            print("finish set_vs_game")
 
         elif self.current_state == "team_game":
-            self.current_time = time.time() 
+            self.current_time = time.time()
             if self.current_time - self.start_time > 31:
                 self.current_state = "time_out"
             self.map.knight_01.check_zombie_on_map(2)
@@ -523,7 +523,7 @@ class Game_Window(arcade.Window):
         arcade.draw_text(output,SCREEN_WIDTH-SCREEN_WIDTH/4,375,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
         output = "Press any key to continue"
         arcade.draw_text(output,SCREEN_WIDTH/2,100,arcade.color.RED, size, width=500, align="center",anchor_x="center", anchor_y="center")
-        
+
 
     def team_lose(self):
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HIGHT // 2,SCREEN_WIDTH, SCREEN_HIGHT, self.gg)
@@ -697,7 +697,7 @@ class Game_Window(arcade.Window):
                 count += 1
             self.map.set_up = 0
             self.map.board.vs_standard_draw()
-            self.map.board.event_draw()            
+            self.map.board.event_draw()
         elif self.current_state == "team_game":
             self.map.draw_grid()
             self.map.draw_wall()
@@ -710,7 +710,7 @@ class Game_Window(arcade.Window):
                 count += 1
             self.map.set_up = 0
             self.map.board.vs_standard_draw()
-            self.map.board.event_draw()            
+            self.map.board.event_draw()
 
     def draw_knight(self):
         if self.map.knight_01.status == 1:
@@ -741,7 +741,7 @@ class Game_Window(arcade.Window):
             self.map.on_key_press(key, key_modifiers)
         elif self.current_state in ["you_lose","you_win","time_out","vs_lose","vs_win","team_win","team_lose"] and key in self.all_key:
             self.current_state = "interface"
-            self.point = 1
+#            self.point = 1
         elif self.current_state == "interface" and key in self.all_up:
             if self.point == 1:
                 self.point = 1
@@ -756,7 +756,7 @@ class Game_Window(arcade.Window):
             self.current_state = "welcome"
         elif self.current_state in ["set_classic","set_survival","set_team"] and key in self.all_left:
             self.current_state = "interface"
-            self.point = 1
+#            self.point = 1
 #Classic Mode
         elif self.current_state == "interface" and key in [100, 65363, 104, 108] and self.point == 1:
             self.classic_tab=0
