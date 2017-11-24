@@ -16,6 +16,20 @@
 #define LIGHT_HIGH_THRES    700
 #define LIGHT_LOW_THRES     100
 
+// port b
+#define player_3 0
+#define player_1 4
+
+#define left 5
+#define right 1
+
+// port c
+#define player_2 1
+#define player_4 5
+
+#define up 0
+#define down 4
+
 // มาโครสำหรับจำลองการหน่วงเวลาใน protothread
 #define PT_DELAY(pt,ms,tsVar) \
   tsVar = timer_millis(); \
@@ -186,8 +200,11 @@ struct pt blink_pt;
 struct pt all_switch_pt;
 
 void init_peripheral(){
-    DDRC = 0b0111;
-    PORTC = 0b1000;
+    DDRC = 0b100010;
+	DDRB = 0b010001;
+	PORTC = 0b111111;
+	PORTB = 0b111111;
+  	DDRD |= (1<<PD3);
 }
 
 ////////////////////////////////////////////////////////////////
@@ -215,22 +232,128 @@ void sendMouse(int8_t dx, int8_t dy, uint8_t buttons)
   usbSetInterrupt((uchar*)&reportMouse, sizeof(reportMouse));
 }
 
+void blink(){
+	PORTD ^= (1<<PD3);
+}
+
 PT_THREAD(all_switch_task(struct pt *pt)){
     static uint32_t ts = 0;
     PT_BEGIN(pt);
 
     for(;;){
-        if ((PINC & (1<<3))==0){
-            PORTC ^= 0b111;
-            sendKey(KEY_W,0);
-            PT_DELAY(pt,10,ts);
-        }
-        sendKey(KEY_NONE,0);
-        PT_DELAY(pt,10,ts);
-    }
-
-    PT_END(pt);
+		
+		//blink();
+		// Check for player_01
+		PORTB &= ~(1<<player_1);
+//		blink();
+//		PT_DELAY(pt, 200, ts);
+		if((PINC & (1<<up)) == 0){
+			blink();
+			PT_DELAY(pt, 200, ts);			
+//			sendKey(KEY_W,0);
+//			PT_DELAY(pt, 200, ts);
+//			sendKey(KEY_NONE,0);
+			sendKey(KEY_U,0);
+			PT_DELAY(pt, 200, ts);
+			sendKey(KEY_P,0);
+			PT_DELAY(pt, 200, ts);
+			sendKey(KEY_NONE,0);
+			PT_DELAY(pt, 200, ts);
+		}
+		else if(PINC & (1<<down) ==0){
+			blink();
+			PT_DELAY(pt, 200, ts);
+			sendKey(KEY_S,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+		else if(PINB & (1<<left) ==0){
+			blink();
+			sendKey(KEY_A,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+		else if(PINB & (1<<right) ==0){
+			blink();
+			sendKey(KEY_D,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+/*		PORTB |= (1<<player_1);
+		// Check for player_02
+		PORTC &= ~(1<<player_2);
+		if(PINC & (1<<up) == 0){
+			sendKey(KEY_UP_ARROW,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+		else if(PINC & (1<<down) ==0){
+			sendKey(KEY_DOWN_ARROW,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+		else if(PINB & (1<<left) ==0){
+			sendKey(KEY_LEFT_ARROW,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+		else if(PINB & (1<<right) ==0){
+			sendKey(KEY_RIGHT_ARROW,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+		PORTC |= (1<<player_2);
+		// Check for player_03
+		PORTB &= ~(1<<player_3);
+		if(PINC & (1<<up) == 0){
+			sendKey(KEY_T,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+		else if(PINC & (1<<down) ==0){
+			sendKey(KEY_G,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+		else if(PINB & (1<<left) ==0){
+			sendKey(KEY_F,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+		else if(PINB & (1<<right) ==0){
+			sendKey(KEY_H,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+		PORTB |= (1<<player_3);
+		// Check for player_04
+		PORTC &= ~(1<<player_4);
+		if(PINC & (1<<up) == 0){
+			sendKey(KEY_I,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+		else if(PINC & (1<<down) ==0){
+			sendKey(KEY_K,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+		else if(PINB & (1<<left) ==0){
+			sendKey(KEY_J,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+		else if(PINB & (1<<right) ==0){
+			sendKey(KEY_L,0);
+			PT_DELAY(pt, 100, ts);
+			sendKey(KEY_NONE,0);
+		}
+		PORTC |= (1<<player_4);
+		PT_DELAY(pt, 100, ts); */
+	}
+	PT_END(pt);
 }
+
 
 PT_THREAD(blink_task(struct pt *pt))
 {
@@ -255,7 +378,7 @@ PT_THREAD(main_task(struct pt *pt))
 {
     PT_BEGIN(pt);
 
-    blink_task(&blink_pt);
+//    blink_task(&blink_pt);
     all_switch_task(&all_switch_pt); 
 
     PT_END(pt);
