@@ -61,7 +61,7 @@ PROGMEM const char usbHidReportDescriptor[USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH] 
   0x75, 0x01,                    //   REPORT_SIZE (1)
   0x95, 0x08,                    //   REPORT_COUNT (8)
   0x81, 0x02,                    //   INPUT (Data,Var,Abs)
-  0x95, 0x01,                    //   REPORT_COUNT (1)
+  0x95, 0x04,                    //   REPORT_COUNT (1) now is 4
   0x75, 0x08,                    //   REPORT_SIZE (8)
   0x25, 0x65,                    //   LOGICAL_MAXIMUM (101)
   0x19, 0x00,                    //   USAGE_MINIMUM (Reserved (no event indicated))
@@ -140,12 +140,18 @@ typedef struct
    * +-----------+-----+-----+-----+-----+-----+-----+-----+-----+
    * |  1        |           Modifiers (shift,ctrl,etc)          |
    * +-----------+-----+-----+-----+-----+-----+-----+-----+-----+
-   * |  2        |                 Key Code                      |
+   * |  2        |                 Key Code #1                   |
+   * +-----------+-----+-----+-----+-----+-----+-----+-----+-----+
+   * |  3        |                 Key Code #2                   |
+   * +-----------+-----+-----+-----+-----+-----+-----+-----+-----+
+   * |  4        |                 Key Code #3                   |
+   * +-----------+-----+-----+-----+-----+-----+-----+-----+-----+
+   * |  5        |                 Key Code #4                   |
    * +-----------+-----+-----+-----+-----+-----+-----+-----+-----+
    */
   uint8_t  report_id;
   uint8_t  modifiers;
-  uint8_t  key_code;
+  uint8_t  key_code[4];
 } ReportKeyboard;
 
 typedef struct
@@ -198,6 +204,12 @@ uint16_t light;  // Updated by Light-Task; to be shared among threads
 struct pt main_pt;
 struct pt blink_pt;
 struct pt all_switch_pt;
+struct pt send_4_key_pt;
+
+uint8_t key_player_1;
+uint8_t key_player_2;
+uint8_t key_player_3;
+uint8_t key_player_4;
 
 void init_peripheral(){
     DDRC = 0b100010;
@@ -216,11 +228,15 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
 }
 
 //////////////////////////////////////////////////////////////
-void sendKey(uint8_t keycode, uint8_t modifiers)
+void sendKey(uint8_t keycode[], uint8_t modifiers, int type)
 {
-  reportKeyboard.key_code = keycode;
-  reportKeyboard.modifiers = modifiers;
-  usbSetInterrupt((uchar*)&reportKeyboard, sizeof(reportKeyboard));
+    reportKeyboard.key_code[0] = keycode[0];
+    reportKeyboard.key_code[1] = keycode[1];
+    reportKeyboard.key_code[2] = keycode[2];
+    reportKeyboard.key_code[3] = keycode[3];
+    reportKeyboard.modifiers = modifiers;
+    usbSetInterrupt((uchar*)&reportKeyboard, sizeof(reportKeyboard));
+    
 }
 
 //////////////////////////////////////////////////////////////
@@ -236,120 +252,170 @@ void blink(){
 	PORTD ^= (1<<PD3);
 }
 
-PT_THREAD(all_switch_task(struct pt *pt)){
+PT_THREAD(send_4_key_task(struct pt *pt)){
     static uint32_t ts = 0;
     PT_BEGIN(pt);
 
+    for (;;)
+    {
+        //PT_DELAY(pt,1000,ts);
+        PT_WAIT_UNTIL(pt,usbInterruptIsReady());
+        reportKeyboard.key_code[0] = key_player_1;
+        reportKeyboard.key_code[1] = key_player_2;
+        reportKeyboard.key_code[2] = key_player_3;
+        reportKeyboard.key_code[3] = key_player_4;
+        reportKeyboard.modifiers = 0;
+        usbSetInterrupt((uchar*)&reportKeyboard, sizeof(reportKeyboard));
+        blink();
+        //PT_DELAY(pt,20,ts);
+        //PT_WAIT_UNTIL(pt,usbInterruptIsReady());
+        //reportKeyboard.key_code[0] = KEY_NONE;
+        //reportKeyboard.key_code[1] = KEY_NONE;
+        //reportKeyboard.key_code[2] = KEY_NONE;
+        //reportKeyboard.key_code[3] = KEY_NONE;
+        //reportKeyboard.modifiers = 0;
+        //usbSetInterrupt((uchar*)&reportKeyboard, sizeof(reportKeyboard));
+        //blink();
+    }
+    PT_END(pt); 
+}
+
+PT_THREAD(all_switch_task(struct pt *pt)){
+    static uint32_t ts = 0;
+    PT_BEGIN(pt);
+    int state = 0;
     for(;;){
 		
-		//blink();
 		// Check for player_01
 		PORTB &= ~(1<<player_1);
-//		blink();
-//		PT_DELAY(pt, 200, ts);
 		if((PINC & (1<<up)) == 0){
-			blink();
+//			blink();
+/*			sendKey(KEY_W,0,1);
 			PT_DELAY(pt, 200, ts);			
-//			sendKey(KEY_W,0);
-//			PT_DELAY(pt, 200, ts);
-//			sendKey(KEY_NONE,0);
-			sendKey(KEY_U,0);
-			PT_DELAY(pt, 200, ts);
-			sendKey(KEY_P,0);
-			PT_DELAY(pt, 200, ts);
-			sendKey(KEY_NONE,0);
-			PT_DELAY(pt, 200, ts);
+			sendKey(KEY_NONE,0,1);
+			PT_DELAY(pt, 200, ts); */
+         key_player_1 = KEY_W;		
 		}
-		else if(PINC & (1<<down) ==0){
-			blink();
+		else if((PINC & (1<<down)) ==0){
+//			blink();
+/*			sendKey(KEY_S,0,1);
 			PT_DELAY(pt, 200, ts);
-			sendKey(KEY_S,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+			sendKey(KEY_NONE,0,1);
+			PT_DELAY(pt, 200, ts); */
+         key_player_1 = KEY_S;		
 		}
-		else if(PINB & (1<<left) ==0){
-			blink();
-			sendKey(KEY_A,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+		else if((PINB & (1<<left)) ==0){
+//			blink();
+/*			sendKey(KEY_A,0,1);
+			PT_DELAY(pt, 200, ts);
+			sendKey(KEY_NONE,0,1);
+			PT_DELAY(pt, 200, ts);*/
+         key_player_1 = KEY_A;			
 		}
-		else if(PINB & (1<<right) ==0){
-			blink();
-			sendKey(KEY_D,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+		else if((PINB & (1<<right)) ==0){
+//			blink();
+/*			sendKey(KEY_D,0,1);
+			PT_DELAY(pt, 200, ts);
+			sendKey(KEY_NONE,0,1);
+			PT_DELAY(pt, 200, ts);			*/
+         key_player_1 = KEY_D;
 		}
-/*		PORTB |= (1<<player_1);
+      else{
+         key_player_1 = KEY_NONE;
+      }
+		PORTB |= (1<<player_1);
 		// Check for player_02
 		PORTC &= ~(1<<player_2);
-		if(PINC & (1<<up) == 0){
-			sendKey(KEY_UP_ARROW,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+		if((PINC & (1<<up)) == 0){
+			blink();
+//			sendKey(KEY_UP_ARROW,0,1);
+//			PT_DELAY(pt, 200, ts);
+         key_player_2 = KEY_UP_ARROW;		
 		}
-		else if(PINC & (1<<down) ==0){
-			sendKey(KEY_DOWN_ARROW,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+		else if((PINC & (1<<down)) ==0){
+			blink();
+//			sendKey(KEY_DOWN_ARROW,0,1);
+//			PT_DELAY(pt, 200, ts);
+         key_player_2 = KEY_DOWN_ARROW;		
 		}
-		else if(PINB & (1<<left) ==0){
-			sendKey(KEY_LEFT_ARROW,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+		else if((PINB & (1<<left)) ==0){
+			blink();
+//			sendKey(KEY_LEFT_ARROW,0,1);
+//			PT_DELAY(pt, 200, ts);
+         key_player_2 = KEY_LEFT_ARROW;		
 		}
-		else if(PINB & (1<<right) ==0){
-			sendKey(KEY_RIGHT_ARROW,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+		else if((PINB & (1<<right)) ==0){
+			blink();
+//			sendKey(KEY_RIGHT_ARROW,0,1);
+//			PT_DELAY(pt, 200, ts);
+         key_player_2 = KEY_RIGHT_ARROW;		
 		}
+      else{
+         key_player_2 = KEY_NONE;
+      }
 		PORTC |= (1<<player_2);
 		// Check for player_03
 		PORTB &= ~(1<<player_3);
-		if(PINC & (1<<up) == 0){
-			sendKey(KEY_T,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+		if((PINC & (1<<up)) == 0){
+			blink();
+//			sendKey(KEY_T,0,1);
+//			PT_DELAY(pt, 200, ts);
+         key_player_3 = KEY_T;
 		}
-		else if(PINC & (1<<down) ==0){
-			sendKey(KEY_G,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+		else if((PINC & (1<<down)) ==0){
+			blink();
+//			sendKey(KEY_G,0,1);
+//			PT_DELAY(pt, 200, ts);
+         key_player_3 = KEY_G;
 		}
-		else if(PINB & (1<<left) ==0){
-			sendKey(KEY_F,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+		else if((PINB & (1<<left)) ==0){
+			blink();
+//			sendKey(KEY_F,0,1);
+//			PT_DELAY(pt, 200, ts);
+         key_player_3 = KEY_F;
 		}
-		else if(PINB & (1<<right) ==0){
-			sendKey(KEY_H,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+		else if((PINB & (1<<right)) ==0){
+			blink();
+//			sendKey(KEY_H,0,1);
+//			PT_DELAY(pt, 200, ts);
+         key_player_3 = KEY_H;
 		}
+      else{
+        key_player_3 = KEY_NONE;
+      }
 		PORTB |= (1<<player_3);
 		// Check for player_04
 		PORTC &= ~(1<<player_4);
-		if(PINC & (1<<up) == 0){
-			sendKey(KEY_I,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+		if((PINC & (1<<up)) == 0){
+			blink();
+//			sendKey(KEY_I,0,1);
+//			PT_DELAY(pt, 200, ts);
+         key_player_4 = KEY_I;
 		}
-		else if(PINC & (1<<down) ==0){
-			sendKey(KEY_K,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+		else if((PINC & (1<<down)) ==0){
+			blink();
+//			sendKey(KEY_K,0,1);
+//			PT_DELAY(pt, 200, ts);
+         key_player_4 = KEY_K;
 		}
-		else if(PINB & (1<<left) ==0){
-			sendKey(KEY_J,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+		else if((PINB & (1<<left)) ==0){
+			blink();
+//			sendKey(KEY_J,0,1);
+//			PT_DELAY(pt, 200, ts);
+         key_player_4 = KEY_J;
 		}
-		else if(PINB & (1<<right) ==0){
-			sendKey(KEY_L,0);
-			PT_DELAY(pt, 100, ts);
-			sendKey(KEY_NONE,0);
+		else if((PINB & (1<<right)) ==0){
+			blink();
+//			sendKey(KEY_L,0,1);
+//			PT_DELAY(pt, 200, ts);
+         key_player_4 = KEY_L;
 		}
+      else{
+         key_player_4 = KEY_NONE;
+      }
 		PORTC |= (1<<player_4);
-		PT_DELAY(pt, 100, ts); */
+      PT_YIELD(pt);	
+//      PT_YIELD(&send_4_key_pt);
 	}
 	PT_END(pt);
 }
@@ -380,7 +446,7 @@ PT_THREAD(main_task(struct pt *pt))
 
 //    blink_task(&blink_pt);
     all_switch_task(&all_switch_pt); 
-
+    send_4_key_task(&send_4_key_pt);
     PT_END(pt);
 }
 
@@ -399,12 +465,16 @@ int main()
   // Initialize USB reports
   reportKeyboard.report_id = REPORT_ID_KEYBOARD;
   reportKeyboard.modifiers = 0;
-  reportKeyboard.key_code = KEY_NONE;
+  reportKeyboard.key_code[0] = KEY_NONE;
+  reportKeyboard.key_code[1] = KEY_NONE;
+  reportKeyboard.key_code[2] = KEY_NONE;
+  reportKeyboard.key_code[3] = KEY_NONE;
 
   // Initialize tasks
   PT_INIT(&main_pt);
   PT_INIT(&blink_pt);
   PT_INIT(&all_switch_pt);
+  PT_INIT(&send_4_key_pt);
   sei();
   for (;;)
   {
